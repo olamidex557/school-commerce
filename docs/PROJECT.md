@@ -28,4 +28,4 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Supabase (Postgres, Auth, S
 
 ## Status
 
-Phase 1 foundation is complete. Database and authentication integrations are scaffolded but require Supabase configuration and the Phase 2 migration to be applied.
+Phase 2 application implementation is complete. The project operator has pushed the Supabase migrations; the configured REST API now exposes the schema. Admin authentication has been audited and hardened locally, while end-to-end login and RLS behavior still require authorized remote test identities.

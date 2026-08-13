@@ -8,20 +8,23 @@ import {
   PackageCheck,
 } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
+import {
+  CatalogueEmptyState,
+  CatalogueErrorState,
+} from "@/components/storefront/catalogue-state";
+import { ProductGrid } from "@/components/storefront/product-grid";
+import { SiteFooter } from "@/components/storefront/site-footer";
+import { SiteHeader } from "@/components/storefront/site-header";
 import { Container } from "@/components/ui/container";
-
-const categories = [
-  {
-    name: "Charging Cables",
-    detail: "Cords that keep up with campus days.",
-    icon: Cable,
-  },
-  {
-    name: "Earpieces",
-    detail: "Sound for study sessions and commutes.",
-    icon: Headphones,
-  },
-];
+import {
+  CatalogueDataError,
+  getCategories,
+  getFeaturedProducts,
+} from "@/lib/catalogue/catalogue";
+import {
+  type CatalogueCategory,
+  type CatalogueProduct,
+} from "@/lib/catalogue/types";
 
 const conveniencePoints = [
   {
@@ -41,23 +44,22 @@ const conveniencePoints = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  let categories: CatalogueCategory[] = [];
+  let featuredProducts: CatalogueProduct[] = [];
+  let dataError = false;
+  try {
+    [categories, featuredProducts] = await Promise.all([
+      getCategories(),
+      getFeaturedProducts(),
+    ]);
+  } catch (error) {
+    if (!(error instanceof CatalogueDataError)) throw error;
+    dataError = true;
+  }
   return (
     <main>
-      <header className="border-b border-black/10">
-        <Container className="flex h-16 items-center justify-between">
-          <Link href="/" className="text-lg font-black tracking-tight">
-            Campus Accessories
-          </Link>
-          <nav
-            aria-label="Primary navigation"
-            className="flex items-center gap-5 text-sm font-semibold"
-          >
-            <Link href="/shop">Shop</Link>
-            <Link href="/cart">Cart</Link>
-          </nav>
-        </Container>
-      </header>
+      <SiteHeader />
       <section className="bg-[#17211d] py-20 text-white sm:py-28">
         <Container className="grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
           <div>
@@ -101,24 +103,64 @@ export default function HomePage() {
             The everyday essentials
           </h2>
           <div className="mt-9 grid gap-4 md:grid-cols-2">
-            {categories.map(({ name, detail, icon: Icon }) => (
-              <Link
-                key={name}
-                href="/shop"
-                className="group rounded-3xl border border-black/10 bg-white p-7 transition hover:-translate-y-1 hover:shadow-lg"
-              >
-                <Icon size={30} />
-                <h3 className="mt-10 text-2xl font-black">{name}</h3>
-                <p className="mt-2 text-[#5b665f]">{detail}</p>
-                <span className="mt-6 inline-flex items-center gap-2 font-bold">
-                  Explore{" "}
-                  <ArrowRight
-                    size={16}
-                    className="transition group-hover:translate-x-1"
-                  />
-                </span>
-              </Link>
-            ))}
+            {categories.length ? (
+              categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/shop?category=${category.slug}`}
+                  className="group rounded-3xl border border-black/10 bg-white p-7 transition hover:-translate-y-1 hover:shadow-lg"
+                >
+                  {category.slug === "cables" ? (
+                    <Cable size={30} />
+                  ) : (
+                    <Headphones size={30} />
+                  )}
+                  <h3 className="mt-10 text-2xl font-black">{category.name}</h3>
+                  <p className="mt-2 text-[#5b665f]">
+                    {category.description ||
+                      "Explore campus-ready accessories."}
+                  </p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-bold">
+                    Explore{" "}
+                    <ArrowRight
+                      size={16}
+                      className="transition group-hover:translate-x-1"
+                    />
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <CatalogueEmptyState />
+            )}
+          </div>
+        </Container>
+      </section>
+      <section className="py-18 sm:py-24">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold tracking-[0.18em] text-[#5b665f] uppercase">
+                Featured picks
+              </p>
+              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+                Essentials students rely on
+              </h2>
+            </div>
+            <Link
+              className="rounded-sm text-sm font-bold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+              href="/shop"
+            >
+              View all products
+            </Link>
+          </div>
+          <div className="mt-9">
+            {dataError ? (
+              <CatalogueErrorState />
+            ) : featuredProducts.length ? (
+              <ProductGrid products={featuredProducts} />
+            ) : (
+              <CatalogueEmptyState />
+            )}
           </div>
         </Container>
       </section>
@@ -133,14 +175,7 @@ export default function HomePage() {
           ))}
         </Container>
       </section>
-      <footer className="py-10">
-        <Container className="flex flex-col gap-3 text-sm text-[#5b665f] sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Campus Accessories</p>
-          <a href="https://wa.me/" aria-label="Contact us on WhatsApp">
-            WhatsApp us
-          </a>
-        </Container>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

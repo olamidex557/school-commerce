@@ -1,12 +1,16 @@
 # Features
 
-| Feature                         | Status    | Phase | Notes                                                                   |
-| ------------------------------- | --------- | ----- | ----------------------------------------------------------------------- |
-| Documentation system            | completed | 1     | Source-of-truth phase and technical documents.                          |
-| Next.js foundation              | completed | 1     | Strict TS, Tailwind, ESLint, Prettier, Vitest.                          |
-| Initial responsive home UI      | completed | 1     | Static branded shell and navigation.                                    |
-| Supabase schema/auth foundation | completed | 1     | Migration and client/proxy scaffolding; not yet connected to a project. |
-| Storefront catalogue            | planned   | 3     | Database-backed catalogue.                                              |
-| Cart and guest checkout         | planned   | 4     | Server-calculated totals.                                               |
-| Paystack payments               | planned   | 5     | Server-only initialization/verification.                                |
-| Admin dashboard                 | planned   | 6     | Supabase-authenticated admins.                                          |
+| Feature                               | Status            | Phase | Notes                                                                                                                                                       |
+| ------------------------------------- | ----------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Documentation system                  | completed         | 1     | Source-of-truth phase and technical documents.                                                                                                              |
+| Next.js foundation                    | completed         | 1     | Strict TS, Tailwind, ESLint, Prettier, Vitest.                                                                                                              |
+| Initial responsive home UI            | completed         | 1     | Static branded shell and navigation.                                                                                                                        |
+| Supabase schema/auth foundation       | in-progress       | 2     | Clients, RLS correction, protected routes, and admin login are implemented; remote application/verification is pending.                                     |
+| Admin sign-in and authorization guard | completed (local) | 2     | Email/password login, sign-out, and proxy/server guards; end-to-end testing needs configured Supabase.                                                      |
+| Admin sign-in abuse control           | completed (local) | 2     | Server-action validation, generic errors, and configurable process-local IP/email limiter; distributed enforcement remains a production deployment concern. |
+| Invalid Supabase session recovery     | completed (local) | 2     | Admin proxy clears only explicit invalid-refresh-token Supabase cookie chunks and treats the request as signed out.                                         |
+| Storefront catalogue                  | completed (local) | 3     | Server-rendered home/shop/product pages with public-RLS Supabase reads; remote data verification is blocked by the current restricted network.              |
+| Catalogue discovery                   | completed (local) | 3     | URL-backed validated search, category filtering, and featured/newest/price/name sorting.                                                                    |
+| Cart and guest checkout               | planned           | 4     | Server-calculated totals.                                                                                                                                   |
+| Paystack payments                     | planned           | 5     | Server-only initialization/verification.                                                                                                                    |
+| Admin dashboard                       | planned           | 6     | Supabase-authenticated admins.                                                                                                                              |

@@ -38,4 +38,5 @@ npm run build
 ```
 
 See `docs/PROJECT.md`, `docs/ROADMAP.md`, and the phase files before starting work. Deployment requires production environment variables, an applied migration, a configured Supabase Auth redirect URL, and Paystack production credentials when payments are enabled.
+
 # school-commerce
