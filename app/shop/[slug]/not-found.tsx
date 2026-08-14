@@ -9,7 +9,7 @@ export default function ProductNotFound() {
         This product may be unavailable or no longer listed.
       </p>
       <Link
-        className="mt-7 inline-flex rounded-full bg-[#17211d] px-5 py-3 text-sm font-bold text-white focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+        className="button-primary focus-ring mt-7"
         href="/shop"
       >
         Browse products

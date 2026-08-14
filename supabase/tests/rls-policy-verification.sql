@@ -24,4 +24,11 @@ begin
   ) then
     raise exception 'published product read policy is missing';
   end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'storage' and tablename = 'objects' and policyname = 'admins manage product image objects'
+  ) then
+    raise exception 'admin-only product image storage policy is missing';
+  end if;
 end $$;

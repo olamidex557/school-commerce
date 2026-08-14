@@ -10,20 +10,20 @@ Objective: provision Supabase, apply/validate schema, and add hardened admin log
 
 ## Phase 3 — Customer storefront — in-progress
 
-Objective: database-backed home, shop, category/search, and product pages. Dependency: Phase 2. Implementation and focused local tests are complete. Remote public catalogue reads and a production build must be rerun from an environment that permits outgoing Supabase access and Turbopack helper-process port binding before completion.
+Objective: database-backed home, shop, category/search, and product pages. Dependency: Phase 2. Implementation, focused tests, public read/mutation-boundary checks, and live public catalogue reads are complete. The live catalogue has two categories but no products, so populated image/product-detail/filter/sort states cannot yet be exercised. Completion remains in progress pending authenticated UI lifecycle verification and a production build in an environment that permits Turbopack helper-process port binding.
 
-## Phase 4 — Cart and checkout — planned
+## Phase 4 — Admin catalogue management — in-progress
 
-Objective: persistent guest cart and server-calculated guest checkout. Dependency: Phase 3.
+Objective: let authorised administrators manage the real categories, products, variants, stock, feature/archive state, and images served by the Phase 3 storefront. Dependencies: Phases 2–3. The protected routes, validated server actions, Storage migration, focused local tests, remote migration/policy check, and anonymous mutation-denial check are complete. Completion awaits remote authenticated admin/non-admin mutation and browser verification with business-approved temporary inventory.
 
-## Phase 5 — Paystack payments — planned
+## Phase 5 — Cart and checkout — planned
 
-Objective: secure initialization, callback/webhook verification, and confirmation. Dependency: Phase 4.
+Objective: persistent guest cart and server-calculated guest checkout. Dependency: Phase 4.
 
-## Phase 6 — Admin dashboard — planned
+## Phase 6 — Paystack payments — planned
 
-Objective: protected operational administration. Dependencies: Phases 2–5.
+Objective: secure initialization, callback/webhook verification, and confirmation. Dependency: Phase 5.
 
-## Phase 7 — Testing, security and production hardening — planned
+## Phase 7 — Orders, dashboard, and production hardening — planned
 
-Objective: end-to-end coverage, abuse controls, accessibility, and deployment readiness. Dependencies: Phases 1–6.
+Objective: order operations, dashboard, end-to-end coverage, accessibility, and deployment hardening. Dependencies: Phases 1–6.

@@ -22,7 +22,7 @@ export function AdminLoginForm() {
             state.fieldErrors?.email ? "email-error" : undefined
           }
           aria-invalid={Boolean(state.fieldErrors?.email)}
-          className="w-full rounded-xl border border-black/15 bg-white px-4 py-3 transition outline-none focus-visible:border-[#17211d] focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="form-input"
           id="email"
           name="email"
           type="email"
@@ -46,7 +46,7 @@ export function AdminLoginForm() {
               state.fieldErrors?.password ? "password-error" : undefined
             }
             aria-invalid={Boolean(state.fieldErrors?.password)}
-            className="w-full rounded-xl border border-black/15 bg-white py-3 pr-12 pl-4 transition outline-none focus-visible:border-[#17211d] focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+            className="form-input pr-12"
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
@@ -57,7 +57,7 @@ export function AdminLoginForm() {
           <button
             aria-label={showPassword ? "Hide password" : "Show password"}
             aria-pressed={showPassword}
-            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-[#5b665f] outline-none focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+            className="focus-ring absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-[var(--muted)]"
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             disabled={isPending}
@@ -66,21 +66,21 @@ export function AdminLoginForm() {
           </button>
         </div>
         {state.fieldErrors?.password ? (
-          <p className="mt-2 text-sm text-red-800" id="password-error">
+          <p className="form-error" id="password-error">
             {state.fieldErrors.password}
           </p>
         ) : null}
       </div>
       {state.message ? (
         <p
-          className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800"
+          className="alert-error px-4 py-3 text-sm"
           role="alert"
         >
           {state.message}
         </p>
       ) : null}
       <button
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#17211d] px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+        className="button-primary focus-ring w-full disabled:cursor-not-allowed"
         type="submit"
         disabled={isPending}
       >

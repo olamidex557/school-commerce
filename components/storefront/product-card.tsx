@@ -22,32 +22,32 @@ export function ProductCard({
 }: Readonly<{ product: CatalogueProduct; priority?: boolean }>) {
   const availability = productAvailability(product);
   return (
-    <article className="group flex h-full flex-col rounded-3xl border border-black/10 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-sm)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]">
       <ProductImage
         src={product.images[0]?.url ?? null}
         alt={product.images[0]?.alt ?? product.name}
         priority={priority}
       />
-      <div className="flex flex-1 flex-col px-2 pt-5 pb-2">
-        <p className="text-xs font-bold tracking-[0.14em] text-[#5b665f] uppercase">
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-kicker">
           {product.category.name}
         </p>
-        <h3 className="mt-2 text-lg leading-tight font-black">
+        <h3 className="mt-2 text-xl leading-tight font-black">
           <Link
-            className="rounded-sm focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+            className="focus-ring"
             href={`/shop/${product.slug}`}
           >
             {product.name}
           </Link>
         </h3>
-        <p className="mt-2 text-lg font-black">
+        <p className="mt-4 font-display text-2xl font-bold">
           {formatPrice(productPriceMinor(product))}
         </p>
         <div className="mt-3">
           <StockBadge availability={availability} />
         </div>
         <Link
-          className="mt-5 inline-flex items-center gap-2 rounded-sm text-sm font-bold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="focus-ring mt-6 inline-flex items-center gap-2 text-sm font-bold text-[var(--brand)]"
           href={`/shop/${product.slug}`}
         >
           View product <ArrowUpRight size={16} />

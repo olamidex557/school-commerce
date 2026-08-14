@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   productAvailability,
   productPriceMinor,
+  sortCatalogueProducts,
   type CatalogueProduct,
 } from "./types";
 
@@ -33,5 +34,26 @@ describe("catalogue product presentation", () => {
         })),
       }),
     ).toBe("out-of-stock");
+  });
+
+  it("sorts the public catalogue by the selected supported field", () => {
+    const products = [
+      product,
+      {
+        ...product,
+        id: "featured",
+        name: "Earpiece",
+        featured: true,
+        createdAt: "2026-02-01",
+        variants: [
+          { id: "c", name: "Default", priceMinor: 1000, stockQuantity: 1 },
+        ],
+      },
+    ];
+    expect(sortCatalogueProducts(products, "featured")[0]?.id).toBe("featured");
+    expect(sortCatalogueProducts(products, "price-asc")[0]?.id).toBe(
+      "featured",
+    );
+    expect(sortCatalogueProducts(products, "name")[0]?.name).toBe("Cable");
   });
 });

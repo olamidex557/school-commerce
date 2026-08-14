@@ -16,6 +16,7 @@ import { ProductGrid } from "@/components/storefront/product-grid";
 import { SiteFooter } from "@/components/storefront/site-footer";
 import { SiteHeader } from "@/components/storefront/site-header";
 import { Container } from "@/components/ui/container";
+import { Reveal } from "@/components/ui/motion";
 import {
   CatalogueDataError,
   getCategories,
@@ -60,16 +61,18 @@ export default async function HomePage() {
   return (
     <main>
       <SiteHeader />
-      <section className="bg-[#17211d] py-20 text-white sm:py-28">
+      <section className="relative overflow-hidden bg-[var(--ink)] py-20 text-white sm:py-30">
+        <div className="absolute -top-24 right-[-8rem] h-72 w-72 rounded-full bg-[var(--brand)] blur-3xl opacity-35" />
+        <div className="absolute bottom-[-10rem] left-[20%] h-72 w-72 rounded-full bg-[var(--highlight)] blur-3xl opacity-15" />
         <Container className="grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
-          <div>
-            <p className="mb-5 text-sm font-bold tracking-[0.2em] text-[#c7ff3d] uppercase">
+          <Reveal className="relative">
+            <p className="mb-5 text-kicker text-[var(--highlight)]">
               Made for campus life
             </p>
-            <h1 className="max-w-3xl text-5xl font-black tracking-[-0.06em] sm:text-7xl">
-              Your essentials, right when you need them.
+            <h1 className="font-display max-w-3xl text-5xl font-bold leading-[.94] sm:text-7xl">
+              Tech that keeps up with your campus day.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-white/75">
+            <p className="mt-7 max-w-xl text-lg leading-8 text-white/72">
               Reliable charging cables and earpieces, with straightforward
               pickup or delivery across campus.
             </p>
@@ -81,42 +84,43 @@ export default async function HomePage() {
                 How it works
               </ButtonLink>
             </div>
-          </div>
-          <div className="rounded-[2rem] bg-[#c7ff3d] p-7 text-[#17211d] shadow-2xl sm:p-10">
+          </Reveal>
+          <Reveal className="relative" stagger>
+          <div className="rounded-[var(--radius-xl)] border border-white/15 bg-white/8 p-7 text-white shadow-[var(--shadow-lg)] backdrop-blur sm:p-10">
             <PackageCheck size={38} strokeWidth={2.5} />
-            <p className="mt-8 text-3xl font-black tracking-tight">
+            <p className="font-display mt-8 text-4xl font-bold tracking-tight">
               Campus-ready convenience.
             </p>
             <p className="mt-3 leading-7">
               Choose delivery to your location or collect when it suits your
               schedule.
             </p>
-          </div>
+          </div></Reveal>
         </Container>
       </section>
-      <section id="how-it-works" className="py-18 sm:py-24">
+      <section id="categories" className="section-space">
         <Container>
-          <p className="text-sm font-bold tracking-[0.18em] text-[#5b665f] uppercase">
+          <p className="text-kicker">
             Start here
           </p>
-          <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+          <h2 className="font-display mt-3 text-4xl font-bold sm:text-5xl">
             The everyday essentials
           </h2>
-          <div className="mt-9 grid gap-4 md:grid-cols-2">
+          <Reveal className="mt-9 grid gap-4 md:grid-cols-2" stagger>
             {categories.length ? (
               categories.map((category) => (
                 <Link
                   key={category.id}
                   href={`/shop?category=${category.slug}`}
-                  className="group rounded-3xl border border-black/10 bg-white p-7 transition hover:-translate-y-1 hover:shadow-lg"
+                  className="group rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface)] p-7 shadow-[var(--shadow-sm)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]"
                 >
                   {category.slug === "cables" ? (
                     <Cable size={30} />
                   ) : (
                     <Headphones size={30} />
                   )}
-                  <h3 className="mt-10 text-2xl font-black">{category.name}</h3>
-                  <p className="mt-2 text-[#5b665f]">
+                  <h3 className="font-display mt-10 text-3xl font-bold">{category.name}</h3>
+                  <p className="mt-2 text-[var(--muted)]">
                     {category.description ||
                       "Explore campus-ready accessories."}
                   </p>
@@ -132,28 +136,28 @@ export default async function HomePage() {
             ) : (
               <CatalogueEmptyState />
             )}
-          </div>
+          </Reveal>
         </Container>
       </section>
-      <section className="py-18 sm:py-24">
+      <section className="section-space bg-[var(--canvas-deep)]">
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-sm font-bold tracking-[0.18em] text-[#5b665f] uppercase">
+              <p className="text-kicker">
                 Featured picks
               </p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+              <h2 className="font-display mt-3 text-4xl font-bold sm:text-5xl">
                 Essentials students rely on
               </h2>
             </div>
             <Link
-              className="rounded-sm text-sm font-bold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+              className="focus-ring button-secondary"
               href="/shop"
             >
               View all products
             </Link>
           </div>
-          <div className="mt-9">
+          <Reveal className="mt-9" stagger>
             {dataError ? (
               <CatalogueErrorState />
             ) : featuredProducts.length ? (
@@ -161,16 +165,16 @@ export default async function HomePage() {
             ) : (
               <CatalogueEmptyState />
             )}
-          </div>
+          </Reveal>
         </Container>
       </section>
-      <section className="border-y border-black/10 bg-[#e7ebe0] py-16">
+      <section className="section-space bg-[var(--ink)] text-white">
         <Container className="grid gap-8 md:grid-cols-3">
           {conveniencePoints.map(({ icon: Icon, title, text }) => (
-            <div key={title}>
-              <Icon size={25} />
+            <div key={title} className="border-l border-white/20 pl-5">
+              <Icon className="text-[var(--highlight)]" size={25} />
               <h3 className="mt-4 text-lg font-black">{title}</h3>
-              <p className="mt-2 text-[#5b665f]">{text}</p>
+              <p className="mt-2 text-white/60">{text}</p>
             </div>
           ))}
         </Container>

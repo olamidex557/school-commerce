@@ -10,17 +10,17 @@ export function CatalogueFilters({
   return (
     <form
       action="/shop"
-      className="grid gap-3 rounded-3xl border border-black/10 bg-white p-4 md:grid-cols-[1.5fr_1fr_1fr_auto]"
+      className="surface-card grid gap-3 p-4 md:grid-cols-[1.5fr_1fr_1fr_auto]"
     >
       <label className="relative">
         <span className="sr-only">Search products</span>
         <Search
-          className="absolute top-1/2 left-3 -translate-y-1/2 text-[#5b665f]"
+          className="absolute top-1/2 left-3 -translate-y-1/2 text-[var(--muted)]"
           size={18}
           aria-hidden="true"
         />
         <input
-          className="w-full rounded-xl border border-black/15 bg-white py-3 pr-3 pl-10 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="form-input mt-0 py-3 pr-3 pl-10 text-sm"
           name="search"
           defaultValue={query.search}
           placeholder="Search accessories"
@@ -29,7 +29,7 @@ export function CatalogueFilters({
       <label>
         <span className="sr-only">Filter by category</span>
         <select
-          className="w-full rounded-xl border border-black/15 bg-white px-3 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="form-select mt-0 py-3 text-sm"
           name="category"
           defaultValue={query.category ?? ""}
         >
@@ -44,7 +44,7 @@ export function CatalogueFilters({
       <label>
         <span className="sr-only">Sort products</span>
         <select
-          className="w-full rounded-xl border border-black/15 bg-white px-3 py-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="form-select mt-0 py-3 text-sm"
           name="sort"
           defaultValue={query.sort}
         >
@@ -57,14 +57,14 @@ export function CatalogueFilters({
       </label>
       <div className="flex gap-2">
         <button
-          className="flex-1 rounded-xl bg-[#17211d] px-4 py-3 text-sm font-bold text-white focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="button-primary focus-ring flex-1"
           type="submit"
         >
           Apply
         </button>
         {query.category || query.search || query.sort !== "featured" ? (
           <Link
-            className="rounded-xl border border-black/15 px-4 py-3 text-sm font-bold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+            className="button-secondary focus-ring"
             href={buildShopHref({ sort: "featured" })}
           >
             Reset

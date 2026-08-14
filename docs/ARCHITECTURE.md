@@ -21,3 +21,21 @@ Data flow: browser UI → validated server action/route handler → Supabase wit
 Customer catalogue pages are React server components. `lib/catalogue/catalogue.ts` is server-only and uses the standard server Supabase client with the anon key and public RLS policies; it never imports the service-role key. It maps only public product/category/active-variant/image fields into presentation types. `/`, `/shop`, and `/shop/[slug]` fetch data server-side. `/shop` keeps search, category, and sort state in validated URL search parameters.
 
 Cache Components are not enabled in this project. Catalogue requests remain request-time server reads so future admin changes are not permanently stale. Once Phase 6 mutations exist, tagged/on-demand revalidation can be introduced deliberately. Supabase Storage image paths are converted to public URLs only when `SUPABASE_PRODUCT_IMAGES_BUCKET` is configured; Next Image accepts Supabase Storage URLs through `next.config.ts` remote patterns.
+
+The current remote public API returns categories but no product rows. The code intentionally renders its empty catalogue states rather than creating seed or mock inventory in the production project.
+
+## Admin catalogue management
+
+`/admin/products`, `/admin/products/new`, `/admin/products/[id]`, and `/admin/categories` are inside the protected admin layout. Their server components use `lib/admin/catalogue.ts`, a server-only data-access layer that calls `requireAdmin()` and returns narrowed admin DTOs. Mutations live in `app/admin/(protected)/catalogue-actions.ts`. Each action authenticates/authorizes again, validates untrusted `FormData` with Zod, uses the SSR user-session Supabase client under RLS, and returns only safe field/general errors.
+
+There is no application service-role client. Products and variants are edited with server-validated integer minor-unit prices and stock quantities. Product images are uploaded through a server action after MIME, signature, size, and product ownership checks. The action creates `products/<product UUID>/<random UUID>.<extension>` itself; it does not accept a client storage path. The public `product-images` bucket is created by migration and its object mutations require `is_admin()`.
+
+Catalogue reads are request-time, so they are already fresh. Admin actions additionally call `revalidatePath` for home, shop, all product pages, and affected admin pages to clear any route/client cache state after mutations. The Next.js 16 server-action size limit is 6 MB, while server validation and Storage cap image files at 5 MiB.
+
+The initial schema does not have automatic `updated_at` triggers. Phase 4 product/category/archive/image mutations explicitly set the relevant parent `updated_at` timestamp so the administrative product list has meaningful update dates.
+
+## UI motion boundary
+
+GSAP is isolated to small client components in `components/ui/motion.tsx` and `components/ui/page-transition.tsx`. Server-rendered pages retain data fetching, SEO, and database boundaries; client motion receives rendered children only. ScrollTrigger instances are scoped through `gsap.context()` and reverted on unmount. Reduced-motion users receive immediately visible, static content.
+
+Interactive storefront navigation reads only `lib/storefront/public-config.ts`, which contains browser-safe brand/contact values. The server-only `lib/storefront/config.ts` remains out of the client module graph.

@@ -3,9 +3,9 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { type ShopQuery } from "./query";
 import {
+  sortCatalogueProducts,
   type CatalogueCategory,
   type CatalogueProduct,
-  productPriceMinor,
 } from "./types";
 
 type ProductRow = {
@@ -34,7 +34,7 @@ type ProductRow = {
 
 export class CatalogueDataError extends Error {}
 
-const imageBucket = process.env.SUPABASE_PRODUCT_IMAGES_BUCKET;
+const imageBucket = process.env.SUPABASE_PRODUCT_IMAGES_BUCKET || "product-images";
 
 function mapCategory(row: {
   id: string;
@@ -78,21 +78,6 @@ function mapProduct(
   };
 }
 
-function sortProducts(products: CatalogueProduct[], sort: ShopQuery["sort"]) {
-  return [...products].sort((left, right) => {
-    if (sort === "name") return left.name.localeCompare(right.name);
-    if (sort === "newest") return right.createdAt.localeCompare(left.createdAt);
-    if (sort === "price-asc")
-      return productPriceMinor(left) - productPriceMinor(right);
-    if (sort === "price-desc")
-      return productPriceMinor(right) - productPriceMinor(left);
-    return (
-      Number(right.featured) - Number(left.featured) ||
-      right.createdAt.localeCompare(left.createdAt)
-    );
-  });
-}
-
 export async function getCategories() {
   const supabase = await createClient();
   const { data, error } = await supabase
@@ -129,7 +114,7 @@ export async function getProducts(query: ShopQuery = { sort: "featured" }) {
   const products = data
     .map((row) => mapProduct(row as unknown as ProductRow, imageBaseUrl))
     .filter((product): product is CatalogueProduct => product !== null);
-  return sortProducts(products, query.sort);
+  return sortCatalogueProducts(products, query.sort);
 }
 
 export async function getFeaturedProducts(limit = 4) {

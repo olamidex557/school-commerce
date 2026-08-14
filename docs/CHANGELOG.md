@@ -1,5 +1,29 @@
 # Changelog
 
+## 2026-08-14 — UI/UX redesign
+
+- Added a central Cream/Ivory/Espresso/Caramel design-token system, reusable surface/form/button primitives, and refreshed storefront/admin visual presentation without changing data, auth, or business logic.
+- Added GSAP 3.15.0 page/scroll reveal primitives with context cleanup and reduced-motion support. No cart, checkout, Paystack, or order functionality was added.
+- Corrected the interactive header to use browser-safe storefront configuration rather than importing a server-only module. Verification: lint, typecheck, 26 tests, and production build pass; browser visual tooling remains unavailable.
+
+## 2026-08-14 — Phase 3/4 end-to-end verification attempt
+
+- Confirmed remote migration history and ran the linked RLS-policy verification SQL successfully. Anonymous categories/products reads work; anonymous category/product mutation probes return HTTP 401. Public orders, customers, admin users, and settings returned no rows in the empty live project.
+- Confirmed local `/admin/login` rendering and fixed anonymous redirects from `/admin`, `/admin/products`, and `/admin/categories`; confirmed local storefront empty/not-found states against the unchanged remote catalogue (two categories, zero products).
+- Browser tooling was unavailable, so no password/session was handled and no temporary category, product, image, or non-admin identity was created. Authenticated lifecycle verification and cleanup therefore remain pending. Lint, typecheck, and 26 tests pass; the Turbopack build remains blocked by the managed environment's port-binding restriction.
+
+## 2026-08-14 — Phase 4 (admin catalogue management)
+
+- Added protected category/product/variant/stock/feature/archive administration, image upload/removal, product filters, storefront preview links, and server-side validated/revalidated mutations.
+- Added and pushed `202608140001_product_image_storage.sql`: public `product-images` delivery with a 5 MiB JPEG/PNG/WebP limit and authenticated-admin-only object mutations.
+- Verification: lint, typecheck, and 26 Vitest tests pass; migration list confirms all three migrations remotely. No inventory or test identity was inserted. Production build is still blocked by the managed runtime’s prohibited Turbopack helper-process port binding.
+
+## 2026-08-13 — Phase 3 (live catalogue verification)
+
+- Verified live anonymous Supabase reads: two public categories, zero public products, and no order rows exposed.
+- Verified local home/shop query/invalid-product states against the live empty catalogue. Added focused supported-sort coverage.
+- No seed or production inventory was inserted. Production build remains blocked by the managed environment's Turbopack helper-process port restriction.
+
 ## 2026-08-13 — Phase 2 (admin login recovery fix)
 
 - Moved `useActionState` initial login state out of the `'use server'` action module; that module now exports only the async login action, satisfying Next.js 16 server-action rules.

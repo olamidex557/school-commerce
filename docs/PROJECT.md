@@ -28,4 +28,4 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Supabase (Postgres, Auth, S
 
 ## Status
 
-Phase 2 application implementation is complete. The project operator has pushed the Supabase migrations; the configured REST API now exposes the schema. Admin authentication has been audited and hardened locally, while end-to-end login and RLS behavior still require authorized remote test identities.
+Phase 4 admin catalogue management is implemented locally. The remote Storage/RLS migration is applied, but remote admin mutation and browser-flow validation await a configured administrator and real inventory. The database still contains two public categories and no products; no fictional inventory was inserted. Production build verification remains blocked by the managed execution environment.

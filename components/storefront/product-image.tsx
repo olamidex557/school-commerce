@@ -9,7 +9,7 @@ export function ProductImage({
   if (!src)
     return (
       <div
-        className="flex aspect-square items-center justify-center rounded-2xl bg-[#e7ebe0] text-[#5b665f]"
+        className="flex aspect-square items-center justify-center bg-[var(--surface-strong)] text-[var(--muted)]"
         role="img"
         aria-label={`${alt} image unavailable`}
       >
@@ -17,14 +17,14 @@ export function ProductImage({
       </div>
     );
   return (
-    <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#e7ebe0]">
+    <div className="relative aspect-square overflow-hidden bg-[var(--surface-strong)]">
       <Image
         src={src}
         alt={alt}
         fill
         priority={priority}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        className="object-cover"
+        className="object-cover transition duration-500 group-hover:scale-[1.035]"
       />
     </div>
   );

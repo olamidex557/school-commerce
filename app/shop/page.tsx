@@ -14,6 +14,7 @@ import {
   getProducts,
 } from "@/lib/catalogue/catalogue";
 import { parseShopQuery } from "@/lib/catalogue/query";
+import { Reveal } from "@/components/ui/motion";
 
 export const metadata: Metadata = {
   title: "Shop phone accessories",
@@ -54,12 +55,13 @@ export default async function ShopPage({
     <>
       <SiteHeader />
       <main>
-        <section className="bg-[#17211d] py-14 text-white">
+        <section className="relative overflow-hidden bg-[var(--ink)] py-16 text-white">
+          <div className="absolute right-[-4rem] bottom-[-5rem] h-56 w-56 rounded-full bg-[var(--brand)] opacity-35 blur-3xl" />
           <Container>
-            <p className="text-sm font-bold tracking-[0.16em] text-[#c7ff3d] uppercase">
+            <p className="text-kicker text-[var(--highlight)]">
               Campus-ready accessories
             </p>
-            <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+            <h1 className="font-display mt-3 text-5xl font-bold sm:text-6xl">
               Shop the essentials
             </h1>
             <p className="mt-4 max-w-xl text-white/75">
@@ -68,30 +70,30 @@ export default async function ShopPage({
           </Container>
         </section>
         <Container className="py-10 sm:py-14">
-          <CatalogueFilters categories={result.categories} query={query} />
+          <Reveal><CatalogueFilters categories={result.categories} query={query} /></Reveal>
           <div className="mt-10 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-sm font-bold tracking-[0.14em] text-[#5b665f] uppercase">
+              <p className="text-kicker">
                 {category?.name ?? "All products"}
               </p>
-              <h2 className="mt-2 text-3xl font-black tracking-tight">
+              <h2 className="font-display mt-2 text-4xl font-bold">
                 {result.products.length}{" "}
                 {result.products.length === 1 ? "product" : "products"}
               </h2>
             </div>
             {query.search ? (
-              <p className="text-sm text-[#5b665f]">
+              <p className="text-sm text-[var(--muted)]">
                 Results for “{query.search}”
               </p>
             ) : null}
           </div>
-          <div className="mt-7">
+          <Reveal className="mt-7" stagger>
             {result.products.length ? (
               <ProductGrid products={result.products} />
             ) : (
               <CatalogueEmptyState filtered={hasFilters} />
             )}
-          </div>
+          </Reveal>
         </Container>
       </main>
       <SiteFooter />

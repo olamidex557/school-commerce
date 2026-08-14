@@ -4,13 +4,13 @@ import { storefrontConfig } from "@/lib/storefront/config";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-black/10 py-10">
-      <Container className="flex flex-col gap-3 text-sm text-[#5b665f] sm:flex-row sm:items-center sm:justify-between">
-        <p>
+    <footer className="border-t border-[var(--line)] bg-[var(--ink)] py-12 text-white">
+      <Container className="flex flex-col gap-6 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div><p className="font-display text-2xl font-bold">
           © {new Date().getFullYear()} {storefrontConfig.brandName}
-        </p>
+        </p><p className="mt-1 text-white/55">Campus tech, made simple.</p></div>
         <a
-          className="inline-flex w-fit items-center gap-2 rounded-sm font-semibold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+          className="focus-ring inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 font-semibold hover:bg-white/10"
           href={storefrontConfig.contactHref}
         >
           <MessageCircle size={16} />

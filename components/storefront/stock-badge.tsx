@@ -9,8 +9,8 @@ export function StockBadge({
     <span
       className={
         inStock
-          ? "inline-flex items-center gap-1.5 text-sm font-bold text-emerald-800"
-          : "inline-flex items-center gap-1.5 text-sm font-bold text-red-800"
+          ? "status-in-stock inline-flex items-center gap-1.5 text-sm font-bold"
+          : "status-out-of-stock inline-flex items-center gap-1.5 text-sm font-bold"
       }
     >
       {inStock ? (

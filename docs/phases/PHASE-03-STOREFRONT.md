@@ -32,7 +32,9 @@ No service-role key, customer/order data, settings, or raw database errors are e
 
 ## Tests and verification
 
-`npm run lint` and `npm run typecheck` pass. `npm test` passes 7 files / 15 tests, covering search/filter/sort query parsing, slug validation, availability, and existing business/auth tests. The restricted execution environment could not reach the remote Supabase API, so live catalogue reads, data-backed product detail, RLS row behavior, and image delivery were not verified here. Interactive browser tooling was unavailable.
+`npm run lint` and `npm run typecheck` pass. `npm test` passes 9 files / 19 tests, including search/filter/sort query parsing, supported sort behavior, slug validation, availability, and existing business/auth tests. On 2026-08-13, live anonymous Supabase reads returned two categories, zero products, and no order rows. Local runtime verification confirms `/`, `/shop`, query URLs, and an invalid product route render their expected empty/not-found UI from that real empty catalogue. Interactive browser tooling was unavailable.
+
+On 2026-08-14, end-to-end verification reconfirmed that the remote public API returns two category rows and zero product rows. Local HTTP probes confirm `/`, `/shop`, category/search URLs use real empty states and `/shop/invalid-product-slug` renders the not-found UI. Public categories/products reads return HTTP 200; anonymous category/product write attempts return HTTP 401. The authenticated browser surface was unavailable, so no temporary product could be created through the admin UI to test populated cards, filters, sort results, detail metadata, image delivery, stock, featured state, or archive removal.
 
 `npm run build` began successfully but Turbopack failed because this managed environment forbids a required helper process from binding a port (`Operation not permitted`); no code/type compilation error was reported. It must be rerun in a normal development/CI environment.
 
@@ -46,4 +48,4 @@ No service-role key, customer/order data, settings, or raw database errors are e
 
 ## Remaining work and next phase
 
-Phase 3 stays **in progress** until a network-enabled environment verifies real public categories/products, filtering/sorting, product metadata/images, invalid route, responsive layout, and a production build. No development seed or production inventory was inserted. After those checks, the recommended next phase is Phase 4 — persistent guest cart and server-calculated checkout.
+Phase 3 stays **in progress** until a normal build environment completes `npm run build`, and real inventory exists to verify product cards, filtering/sorting against results, product metadata/images, and responsive layouts. Phase 4 now supplies the protected catalogue-management workflow needed for that real inventory, but no product was inserted during verification because browser-based authenticated UI access was unavailable. After both phases’ verification is complete, the next planned scope is Phase 5 — persistent guest cart and server-calculated checkout.

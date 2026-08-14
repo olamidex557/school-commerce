@@ -63,7 +63,7 @@ function ProductContent({ product }: Readonly<{ product: CatalogueProduct }>) {
         <Container className="py-8 sm:py-12">
           <Link
             href="/shop"
-            className="inline-flex items-center gap-2 rounded-sm text-sm font-bold focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+            className="focus-ring inline-flex items-center gap-2 text-sm font-bold"
           >
             <ArrowLeft size={16} />
             Back to shop
@@ -126,7 +126,7 @@ function ProductContent({ product }: Readonly<{ product: CatalogueProduct }>) {
                 </ul>
               </div>
               <a
-                className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#17211d] px-5 py-3 text-sm font-bold text-white focus-visible:ring-2 focus-visible:ring-[#c7ff3d]"
+                className="button-primary focus-ring mt-9"
                 href={storefrontConfig.contactHref}
               >
                 <MessageCircle size={17} />
