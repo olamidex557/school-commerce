@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Build-time placeholders only. No real Supabase or Paystack credential is
+      # present in CI; runtime integration checks happen after deployment.
+      NEXT_PUBLIC_SUPABASE_URL: https://ci.example.invalid
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-anon-key
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run ci
