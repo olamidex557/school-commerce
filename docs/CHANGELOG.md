@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-15 — Phase 5 (guest cart and checkout review)
+
+- Added a versioned local guest cart that persists only product/variant UUIDs and quantities, plus cart navigation/count, stock-aware variant selection, quantity controls, `/cart`, and `/checkout`.
+- Added server-side checkout reconciliation through public-RLS catalogue reads, Zod guest-detail validation, integer-kobo totals, and pickup/delivery review. Delivery fee is server-determined at zero pending an approved fee rule.
+- No customer/order/order-item writes, inventory reservation, stock mutation, Paystack integration, payment initialization, or payment verification was added. Remote public verification confirms the real project still has zero products, so populated browser flow verification remains pending. Lint, typecheck, 30 tests, and production build pass; browser automation was unavailable.
+
 ## 2026-08-14 — UI/UX redesign
 
 - Added a central Cream/Ivory/Espresso/Caramel design-token system, reusable surface/form/button primitives, and refreshed storefront/admin visual presentation without changing data, auth, or business logic.

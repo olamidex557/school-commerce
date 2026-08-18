@@ -16,9 +16,9 @@ Objective: database-backed home, shop, category/search, and product pages. Depen
 
 Objective: let authorised administrators manage the real categories, products, variants, stock, feature/archive state, and images served by the Phase 3 storefront. Dependencies: Phases 2–3. The protected routes, validated server actions, Storage migration, focused local tests, remote migration/policy check, and anonymous mutation-denial check are complete. Completion awaits remote authenticated admin/non-admin mutation and browser verification with business-approved temporary inventory.
 
-## Phase 5 — Cart and checkout — planned
+## Phase 5 — Cart and checkout — in-progress
 
-Objective: persistent guest cart and server-calculated guest checkout. Dependency: Phase 4.
+Objective: persistent guest cart and server-calculated pre-payment checkout review. Dependency: Phase 4. Local implementation and focused tests are complete; real-inventory browser and normal-environment production-build verification remain pending.
 
 ## Phase 6 — Paystack payments — planned
 

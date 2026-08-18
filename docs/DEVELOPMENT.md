@@ -14,4 +14,6 @@ GSAP is the only motion dependency. Keep animation code in small client componen
 
 Browser-safe storefront branding/contact configuration belongs in `lib/storefront/public-config.ts`; do not import server-only configuration modules into an interactive client component.
 
+Phase 5 cart storage uses the browser key `campus-accessories.cart` and contains only versioned product IDs, variant IDs, and quantities. Do not place catalogue records, customer details, totals, stock, fees, or any Supabase authentication value in it. Checkout review remains a server-authoritative read operation: it must not insert orders/customers or mutate stock until the dedicated payment/order design is implemented.
+
 For the current linked project, CLI migration commands time out while initializing the temporary login role through the pooler. Pooler DNS/TCP is reachable, so do not treat this as a migration error. The CLI supports `supabase link --skip-pooler` for direct database connections, but the direct `db.<ref>.supabase.co:5432` hostname must resolve and the network must support the required IPv6 route before using that mode.

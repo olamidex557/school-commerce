@@ -5,19 +5,31 @@ export function ButtonLink({
   href,
   children,
   variant = "primary",
+  size = "md",
+  admin = false,
 }: Readonly<{
   href: string;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  admin?: boolean;
 }>) {
   return (
     <Link
       href={href}
       className={clsx(
-        "focus-ring inline-flex items-center gap-2",
-        variant === "primary"
-          ? "button-primary"
-          : "button-secondary",
+        "focus-ring",
+        admin
+          ? variant === "primary"
+            ? "admin-button-primary"
+            : variant === "secondary"
+              ? "admin-button-secondary"
+              : "admin-button-ghost"
+          : variant === "primary"
+            ? "button-primary"
+            : "button-secondary",
+        admin && size === "lg" && "admin-button-lg",
+        admin && size === "sm" && "admin-button-sm",
       )}
     >
       {children}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, MessageCircle } from "lucide-react";
+import { AddToCart } from "@/components/storefront/add-to-cart";
 import { notFound } from "next/navigation";
 import { CatalogueErrorState } from "@/components/storefront/catalogue-state";
 import { ProductImage } from "@/components/storefront/product-image";
@@ -125,6 +126,7 @@ function ProductContent({ product }: Readonly<{ product: CatalogueProduct }>) {
                   ))}
                 </ul>
               </div>
+              <AddToCart productId={product.id} variants={product.variants} />
               <a
                 className="button-primary focus-ring mt-9"
                 href={storefrontConfig.contactHref}

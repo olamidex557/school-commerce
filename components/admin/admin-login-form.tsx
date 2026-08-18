@@ -57,7 +57,7 @@ export function AdminLoginForm() {
           <button
             aria-label={showPassword ? "Hide password" : "Show password"}
             aria-pressed={showPassword}
-            className="focus-ring absolute top-1/2 right-3 -translate-y-1/2 rounded-md p-1 text-[var(--muted)]"
+            className="admin-button-ghost admin-button-icon focus-ring absolute top-1/2 right-2 -translate-y-1/2"
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             disabled={isPending}
@@ -72,15 +72,12 @@ export function AdminLoginForm() {
         ) : null}
       </div>
       {state.message ? (
-        <p
-          className="alert-error px-4 py-3 text-sm"
-          role="alert"
-        >
+        <p className="alert-error px-4 py-3 text-sm" role="alert">
           {state.message}
         </p>
       ) : null}
       <button
-        className="button-primary focus-ring w-full disabled:cursor-not-allowed"
+        className="admin-button-primary admin-button-lg focus-ring w-full"
         type="submit"
         disabled={isPending}
       >

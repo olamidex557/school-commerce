@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageTransition } from "@/components/ui/page-transition";
+import { CartProvider } from "@/components/storefront/cart-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +20,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body><PageTransition>{children}</PageTransition></body>
+      <body>
+        <CartProvider>
+          <PageTransition>{children}</PageTransition>
+        </CartProvider>
+      </body>
     </html>
   );
 }

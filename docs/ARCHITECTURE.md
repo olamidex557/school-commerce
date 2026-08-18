@@ -39,3 +39,9 @@ The initial schema does not have automatic `updated_at` triggers. Phase 4 produc
 GSAP is isolated to small client components in `components/ui/motion.tsx` and `components/ui/page-transition.tsx`. Server-rendered pages retain data fetching, SEO, and database boundaries; client motion receives rendered children only. ScrollTrigger instances are scoped through `gsap.context()` and reverted on unmount. Reduced-motion users receive immediately visible, static content.
 
 Interactive storefront navigation reads only `lib/storefront/public-config.ts`, which contains browser-safe brand/contact values. The server-only `lib/storefront/config.ts` remains out of the client module graph.
+
+## Guest cart and checkout review
+
+`CartProvider` is a client-only convenience layer around versioned local storage. Its persisted schema contains only product UUID, variant UUID, and bounded integer quantity; it never stores catalogue records, money, stock, delivery fees, customer details, or authentication data. `/cart` reconciles those identifiers through `app/checkout/actions.ts` and the server-only `lib/checkout/reconcile.ts` module. That module uses the normal SSR Supabase client under public RLS to reload active products, active variants, and public images, verify product/variant ownership and stock, and calculate integer-kobo line/subtotal values.
+
+`/checkout` sends the serialized identifier-only cart and guest details to a Server Action. Zod validates both, then the action repeats reconciliation and derives the delivery fee server-side (currently zero because no approved fee rule exists). It returns a transient review state only. Phase 5 does not insert customers/orders/order items, reserve/decrement stock, send payment data, or contact Paystack.
