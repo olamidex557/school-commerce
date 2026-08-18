@@ -4,7 +4,7 @@
 
 Phase 7 adds validation and deployment gates around the existing Next.js 16, Supabase, and Paystack implementation. It does not initialize payments, call Paystack from CI, write orders, fulfil payments, alter stock, or execute Supabase migrations automatically.
 
-`CI` runs for pull requests to `main` and all branch pushes. It uses Node 22, `npm ci`, linting, strict TypeScript checks, all Vitest tests, a production Next build, immutable-migration safety checks, repository secret scanning, server-secret boundary checks, and a production-dependency audit at high severity. Build-only placeholder public Supabase values are supplied by the workflow; no real service-role or Paystack credential is available to CI.
+`CI` runs for pull requests to `main`. It uses Node 22, `npm ci`, linting, strict TypeScript checks, all Vitest tests, a production Next build, immutable-migration safety checks, repository secret scanning, server-secret boundary checks, and a production-dependency audit at high severity. Build-only placeholder public Supabase values are supplied by the workflow; no real service-role or Paystack credential is available to CI. This single trigger keeps the required check context stable as `CI / validate` rather than creating event-specific duplicate contexts on a pull-request head commit.
 
 ## GitHub workflows
 
