@@ -57,3 +57,7 @@ If a deployment fails, stop promotion, keep the prior Vercel deployment availabl
 ## Failure policy
 
 Any failed CI, preview smoke, migration-safety, secret-boundary, or dependency-audit gate blocks merge or production promotion. Treat an exposed secret as an incident: revoke/rotate it at the provider, remove it from history according to the incident plan, and rerun checks. Treat a payment/webhook failure as a release blocker; do not bypass its verification or stock/idempotency controls to restore availability. Document the failure, corrective pull request, and successful rerun before retrying deployment.
+
+## Phase 7 validation record
+
+On 2026-08-18, the non-production branch `phase7-validation` was pushed at commit `4e41ddb`. The local `npm run ci`, YAML formatting parse, and safe HTTPS smoke script passed. This environment has authenticated Git transport but no GitHub API credential, GitHub CLI, Vercel CLI, or connected browser session; it cannot inspect GitHub Actions runs, create a pull request, inspect/create a Vercel preview, configure branch protection, configure the GitHub `production` environment, or dispatch the protected production-smoke workflow. Those hosted gates remain unverified and must be recorded from GitHub/Vercel before Phase 7 can be completed.
