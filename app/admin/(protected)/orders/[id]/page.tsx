@@ -32,7 +32,10 @@ export default async function AdminOrderDetailPage({
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const order = await getAdminOrder(id);
   if (!order) notFound();
-  const transitions = adminOrderTransitions(order.status);
+  const transitions = adminOrderTransitions(
+    order.status,
+    order.fulfillmentMethod,
+  );
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-10">
@@ -53,7 +56,9 @@ export default async function AdminOrderDetailPage({
           </p>
         </div>
         <div className="rounded-xl bg-[var(--surface-strong)] px-4 py-3 text-sm">
-          <p className="font-bold">{orderStatusLabel(order.status)}</p>
+          <p className="font-bold">
+            {orderStatusLabel(order.status, order.fulfillmentMethod)}
+          </p>
           <p className="mt-1 text-[var(--muted)]">
             Payment: {paymentStatusLabel(order.paymentStatus)}
           </p>
@@ -172,8 +177,15 @@ export default async function AdminOrderDetailPage({
                     key={event.id}
                   >
                     <p className="font-bold">
-                      {orderStatusLabel(event.fromStatus)} →{" "}
-                      {orderStatusLabel(event.toStatus)}
+                      {orderStatusLabel(
+                        event.fromStatus,
+                        order.fulfillmentMethod,
+                      )}{" "}
+                      →{" "}
+                      {orderStatusLabel(
+                        event.toStatus,
+                        order.fulfillmentMethod,
+                      )}
                     </p>
                     <p className="mt-1 text-[var(--muted)]">
                       {dateTime(event.changedAt)} · Admin record{" "}
@@ -195,10 +207,10 @@ export default async function AdminOrderDetailPage({
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 text-[var(--brand)]" size={21} />
               <div>
-                <h2 className="text-xl font-black">Operational status</h2>
+                <h2 className="text-xl font-black">Fulfilment status</h2>
                 <p className="mt-1 text-sm text-[var(--muted)]">
-                  Only validated fulfilment transitions are available. This
-                  never changes payment or stock.
+                  Only validated {order.fulfillmentMethod} transitions are
+                  available. This never changes payment or stock.
                 </p>
               </div>
             </div>
@@ -209,6 +221,16 @@ export default async function AdminOrderDetailPage({
               updatedAt={order.updatedAt}
             />
           </section>
+
+          {order.fulfillmentMethod === "pickup" ? (
+            <section className="surface-card p-5 sm:p-7">
+              <h2 className="text-xl font-black">Pickup instructions</h2>
+              <p className="mt-3 text-sm whitespace-pre-wrap text-[var(--muted)]">
+                {order.pickupInformation ??
+                  "Pickup instructions have not been configured."}
+              </p>
+            </section>
+          ) : null}
 
           <section className="surface-card p-5 sm:p-7">
             <h2 className="text-xl font-black">Payment record</h2>

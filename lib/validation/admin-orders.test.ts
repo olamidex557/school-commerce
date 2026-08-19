@@ -56,15 +56,37 @@ describe("admin order validation and transitions", () => {
     expect(parseAdminOrderStatusForm(paymentTarget).success).toBe(false);
   });
 
-  it("allows only the existing paid/confirmed operational transitions", () => {
-    expect(adminOrderTransitions("paid")).toEqual(["confirmed", "cancelled"]);
-    expect(adminOrderTransitions("confirmed")).toEqual([
+  it("allows only method-specific pickup and delivery transitions", () => {
+    expect(adminOrderTransitions("paid", "pickup")).toEqual([
+      "confirmed",
+      "cancelled",
+    ]);
+    expect(adminOrderTransitions("confirmed", "pickup")).toEqual([
       "completed",
       "cancelled",
     ]);
-    expect(canAdminTransition("paid", "confirmed")).toBe(true);
-    expect(canAdminTransition("paid", "completed")).toBe(false);
-    expect(canAdminTransition("pending_payment", "confirmed")).toBe(false);
-    expect(canAdminTransition("completed", "cancelled")).toBe(false);
+    expect(adminOrderTransitions("confirmed", "delivery")).toEqual([
+      "out_for_delivery",
+      "cancelled",
+    ]);
+    expect(adminOrderTransitions("out_for_delivery", "delivery")).toEqual([
+      "completed",
+      "cancelled",
+    ]);
+    expect(canAdminTransition("paid", "confirmed", "pickup")).toBe(true);
+    expect(canAdminTransition("confirmed", "completed", "pickup")).toBe(true);
+    expect(canAdminTransition("confirmed", "out_for_delivery", "pickup")).toBe(
+      false,
+    );
+    expect(canAdminTransition("confirmed", "completed", "delivery")).toBe(
+      false,
+    );
+    expect(
+      canAdminTransition("out_for_delivery", "completed", "delivery"),
+    ).toBe(true);
+    expect(canAdminTransition("cancelled", "confirmed", "delivery")).toBe(
+      false,
+    );
+    expect(canAdminTransition("completed", "cancelled", "pickup")).toBe(false);
   });
 });

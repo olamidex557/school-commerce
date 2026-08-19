@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-19 — Phase 8 delivery and pickup operations
+
+- Added method-aware fulfilment operations: pickup confirmation is displayed as ready for pickup and completes as collected; delivery confirmation proceeds through `out_for_delivery` before completion. The protected detail displays existing pickup instructions when configured.
+- Applied `202608190002_delivery_pickup_operations.sql` to the linked project. It adds only `out_for_delivery` and updates the existing guarded/audited status RPC; payment, Paystack, checkout, stock, customer, and RLS-policy architecture remain unchanged.
+- Linked schema/policy checks and an anonymous denial probe passed. Controlled authenticated pickup/delivery transition and concurrency verification remains pending because no disposable controlled paid order or non-admin identity is available. No production commerce data was changed.
+- Confirmed no isolated Campus Accessories Supabase test project or controlled non-admin identity is currently available. The linked project's non-mutating inventory contains five existing orders, six payment attempts, and zero status events, so no temporary Auth identity or order fixture was created there. Full authenticated runtime verification is deferred until an isolated project with disposable controlled fixtures is provisioned.
+
 ## 2026-08-19 — Phase 7 admin order operations
 
 - Added protected administrator order list/detail routes with validated URL filters, pagination, immutable order/item/customer snapshots, read-only payment-attempt metadata, operational history, loading/error/empty states, and the existing cream/espresso admin hierarchy.

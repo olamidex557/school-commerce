@@ -31,7 +31,11 @@ export const adminOrderStatusFormSchema = z
   .superRefine((value, context) => {
     // The current status is re-read and validated under a database row lock.
     // This rejects targets that could never be an operational admin action.
-    if (!["confirmed", "completed", "cancelled"].includes(value.nextStatus))
+    if (
+      !["confirmed", "out_for_delivery", "completed", "cancelled"].includes(
+        value.nextStatus,
+      )
+    )
       context.addIssue({
         code: "custom",
         path: ["nextStatus"],
@@ -64,6 +68,9 @@ export function parseAdminOrderStatusForm(formData: FormData) {
   });
 }
 
-export function potentialAdminTransition(status: OrderStatus) {
-  return adminOrderTransitions(status);
+export function potentialAdminTransition(
+  status: OrderStatus,
+  fulfillmentMethod: "delivery" | "pickup",
+) {
+  return adminOrderTransitions(status, fulfillmentMethod);
 }

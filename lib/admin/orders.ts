@@ -25,6 +25,7 @@ export type AdminOrderDetail = AdminOrderSummary & {
   customerPhone: string;
   customerEmail: string | null;
   note: string | null;
+  pickupInformation: string | null;
   paymentReference: string | null;
   paymentVerifiedAt: string | null;
   updatedAt: string;
@@ -187,6 +188,14 @@ export async function getAdminOrder(id: string) {
   if (error) throw new Error("Unable to load order.");
   if (!data) return null;
   const row = data as OrderDetailRow;
+  const { data: settings } =
+    row.fulfillment_method === "pickup"
+      ? await supabase
+          .from("settings")
+          .select("pickup_information")
+          .eq("id", true)
+          .maybeSingle()
+      : { data: null };
   return {
     ...mapSummary(row),
     subtotalMinor: row.subtotal_minor,
@@ -195,6 +204,7 @@ export async function getAdminOrder(id: string) {
     customerPhone: row.customer_phone_snapshot,
     customerEmail: row.customer_email_snapshot,
     note: row.note,
+    pickupInformation: settings?.pickup_information?.trim() || null,
     paymentReference: row.payment_reference,
     paymentVerifiedAt: row.payment_verified_at,
     updatedAt: row.updated_at,

@@ -28,7 +28,7 @@ The checkout Server Action accepts only cart identifiers, a UUID idempotency key
 
 ## Admin order operations
 
-Phase 7 reuses the existing order-status enum: only verified `paid` orders may move to `confirmed` or `cancelled`, and only `confirmed` orders may move to `completed` or `cancelled`. The operation is a locked compare-and-set transition using `orders.updated_at`, and it writes `order_status_events` with the administrator UUID. Payment attempt/order payment fields, order/item/customer snapshots, and stock are read-only to the dashboard. The migration replaces broad authenticated-admin DML policies for order/payment records with admin read policies and a narrowly granted, self-authorising `security definer` transition RPC. Phase 6 service-role payment paths remain unchanged.
+Phase 7/8 use the existing order-status enum plus `out_for_delivery`: verified `paid` orders may move to `confirmed` or `cancelled`; pickup `confirmed` orders may move to `completed` or `cancelled`; delivery `confirmed` orders may move to `out_for_delivery` or `cancelled`; and delivery `out_for_delivery` orders may move to `completed` or `cancelled`. The operation is a locked compare-and-set transition using `orders.updated_at`, and it writes `order_status_events` with the administrator UUID. Payment attempt/order payment fields, order/item/customer snapshots, and stock are read-only to the dashboard. The migration replaces broad authenticated-admin DML policies for order/payment records with admin read policies and a narrowly granted, self-authorising `security definer` transition RPC. Phase 6 service-role payment paths remain unchanged.
 
 ## Storefront catalogue
 

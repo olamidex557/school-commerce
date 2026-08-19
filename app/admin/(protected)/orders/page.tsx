@@ -162,7 +162,7 @@ export default async function AdminOrdersPage({
                     </p>
                   </div>
                   <p className="text-sm font-bold">
-                    {orderStatusLabel(order.status)}
+                    {orderStatusLabel(order.status, order.fulfillmentMethod)}
                   </p>
                   <Link
                     className="admin-button-ghost admin-button-sm focus-ring"
