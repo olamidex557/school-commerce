@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-08-19 — CI/CD deferred
+
+- Removed the unvalidated Phase 7 GitHub Actions workflows, smoke scripts, Dependabot configuration, and CI-only package scripts. CI/CD is intentionally deferred to a future production-readiness phase; its safety requirements are retained in `docs/future/CI-CD.md`.
+- No production deployment or migration was performed, and no commerce, payment, checkout, order, database, RLS, authentication, storage, UI, or motion behavior changed.
+
+## 2026-08-18 — Admin simple-product variant UX
+
+- Removed the automatically generated empty Default variant from the new-product form. Products can now be saved as simple catalogue records, while explicitly added variants show required name, SKU, price, and stock fields with inline server-validation errors.
+- Added regression coverage for an empty simple-product variants payload and checkbox normalization. No database schema, RLS, product mutation, storefront, checkout, payment, order, or CI/CD behavior changed.
+
+## 2026-08-18 — Phase 6 (Paystack payments and orders)
+
+- Added the Paystack payment-attempt migration, server-side redirect initialization, callback recovery, signed `charge.success` webhook, Paystack API verification, and customer-facing result states.
+- Added atomic verified fulfilment with immutable order snapshots, database idempotency constraints, conditional stock deduction, and safe retry of failed/abandoned attempts against the same unpaid order.
+- Added Paystack signature/reference unit coverage. Lint, typecheck, and 52 Vitest tests pass locally. Migration application, Paystack test credentials/dashboard URLs, live webhook, and real concurrent payment testing remain outstanding.
+- Corrected checkout-RPC reference mapping and strictly normalized Paystack's nested initialization response before marking an attempt initialized. A returned provider reference must now equal the application reference. Added malformed-response/reference-mismatch regression coverage and migration `202608180002_fix_payment_rpc_output_collisions.sql` for a proven PL/pgSQL `order_id` output-variable collision; no RLS, stock, or verification rule changed.
+- Corrected callback result redirects behind a public proxy/tunnel: the fixed result route now derives its origin from the configured `PAYSTACK_CALLBACK_URL`, not the local upstream request host. Added redirect, query-injection, invalid-reference, and repeat-callback coverage; callback verification and fulfilment behavior are unchanged.
+- Corrected the callback-to-result handoff by setting the existing HttpOnly payment-reference cookie on valid callback redirects. The result page can now resolve the verified payment server-side without trusting callback query values.
+
 ## 2026-08-15 — Phase 5 (guest cart and checkout review)
 
 - Added a versioned local guest cart that persists only product/variant UUIDs and quantities, plus cart navigation/count, stock-aware variant selection, quantity controls, `/cart`, and `/checkout`.

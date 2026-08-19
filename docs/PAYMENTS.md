@@ -1,5 +1,7 @@
 # Payments
 
-Paystack is planned for Phase 5. The browser will request server-side initialization after a server-created order exists; the server uses `PAYSTACK_SECRET_KEY`, creates a unique payment reference, and stores it with `initialized` status. Callback and webhook paths will verify with Paystack server-side before marking an order paid. Reference uniqueness and conditional updates provide duplicate-processing protection.
+Phase 6 uses Paystack’s server-side redirect initialization flow. The browser receives only Paystack’s authorization URL; `PAYSTACK_SECRET_KEY` remains server-only. `PAYSTACK_CALLBACK_URL` points at `/api/payments/paystack/callback`, and the Paystack dashboard webhook points at `/api/payments/paystack/webhook`.
 
-Failed/cancelled transactions leave the order unpaid/failed according to the verified result. `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` may be used only if an inline payment UI is later selected; the secret key is never exposed. No real keys belong in this document.
+Neither a browser redirect nor webhook payload alone fulfils an order. The webhook checks the raw-body `x-paystack-signature` HMAC-SHA512, then the application verifies the transaction with Paystack and requires matching successful status, reference, amount, and currency. Database uniqueness and an atomic fulfilment RPC prevent duplicate orders and stock decrements. Configure test keys and URLs first; no live-mode verification is claimed.
+
+CI/CD is deferred. When introduced for production readiness, it must never receive Paystack credentials or initialize, verify, or fulfil a transaction; approved Paystack readiness verification remains an explicit operational step. See `docs/future/CI-CD.md`.

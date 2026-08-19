@@ -1,8 +1,8 @@
 # Database
 
-Migrations are `202608100001_initial_schema.sql` (initial schema), `202608100002_restrict_settings_access.sql` (Phase 2 security correction), and `202608140001_product_image_storage.sql` (Phase 4 product media). All three are listed as applied on the linked remote database as of 2026-08-14. Functional admin/non-admin RLS tests still need dedicated remote test identities.
+Migrations include `202608100001_initial_schema.sql` (initial schema), `202608100002_restrict_settings_access.sql` (Phase 2 security correction), `202608140001_product_image_storage.sql` (Phase 4 product media), `202608180001_paystack_payments_orders.sql` (Phase 6 payments), and `202608180002_fix_payment_rpc_output_collisions.sql` (Phase 6 RPC correction). The Phase 6 migrations are additive and must be applied before payment is enabled.
 
-Tables: `categories`, `products`, `product_variants`, `product_images`, `customers`, `orders`, `order_items`, `settings`, and `admin_users`. All primary IDs are UUIDs; monetary values are integer kobo/minor units; timestamps are `timestamptz`.
+Tables: `categories`, `products`, `product_variants`, `product_images`, `customers`, `orders`, `order_items`, `payment_attempts`, `settings`, and `admin_users`. All primary IDs are UUIDs; monetary values are integer kobo/minor units; timestamps are `timestamptz`.
 
 Products belong to categories and may have variants/images. Orders belong to a customer and contain immutable order-item price/name snapshots. Orders use `pending | confirmed | completed | cancelled`; payment uses `unpaid | initialized | paid | failed | refunded`. Stock is on variants (or an implicit default variant), decremented only by future transactional checkout logic after verified payment/reservation policy is finalized.
 
@@ -17,3 +17,9 @@ On 2026-08-13, public anonymous verification returned two category rows and zero
 Phase 4 adds no catalogue table or column. It creates the public `storage.buckets` bucket `product-images`, with a 5 MiB limit and only JPEG, PNG, and WebP MIME types. Its `storage.objects` policy grants object management only to authenticated `is_admin()` users and only under the `products/` path. Public delivery is intentional because catalogue image URLs are public; mutation remains RLS-protected. The application also creates a corresponding `product_images` row only after a successful upload and removes the object when its row is removed.
 
 Phase 5 adds no database migration or table. Cart and checkout review use existing anonymous active-catalogue RLS reads only. The server reloads `products`, `product_variants`, and optional `product_images`; it does not read the protected `settings` row, write customers/orders, or change stock. Delivery fee remains server-determined at zero until an approved scoped configuration path is introduced.
+
+Phase 6 adds the private `payment_attempts` ledger, a normalized customer email, order currency/email/idempotency fields, and the `pending_payment → paid` order path. Reference, order number, transaction ID, and checkout key are database-unique. The server-only service-role client may call narrowly revoked/granted security-definer RPCs: one snapshots an authoritative checkout and one fulfils a previously verified payment. The fulfilment RPC locks payment/order rows and uses conditional stock decrements inside its transaction, so a duplicate event cannot create a second paid order or make stock negative.
+
+The Phase 6 correction migration qualifies `payment_attempts.order_id` and `order_items.order_id` in the PL/pgSQL RPCs. This avoids a collision with `RETURNS TABLE` output variables named `order_id`; no table, RLS, or payment-state design changes are made.
+
+Future CI/CD planning does not alter database operation: production migrations remain manual, reviewed, immutable, and forward-fix only. No automated migration runner is active. See `docs/future/CI-CD.md`.

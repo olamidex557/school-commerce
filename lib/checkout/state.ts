@@ -28,4 +28,9 @@ export type CheckoutActionState = {
   review?: CheckoutReview;
 };
 
+export type PaymentStartState = {
+  message?: string;
+  authorizationUrl?: string;
+};
+
 export const initialCheckoutActionState: CheckoutActionState = {};

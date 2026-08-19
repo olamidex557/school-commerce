@@ -47,7 +47,9 @@ export const productInputSchema = z.object({
   categoryId: z.string().uuid("Choose a valid category."),
   featured: z.boolean(),
   archived: z.boolean(),
-  variants: z.array(variantInputSchema).min(1, "Add at least one variant.").max(30),
+  // Products may be created before purchasable options are known. Once an
+  // option is explicitly added, every pricing/inventory field is required.
+  variants: z.array(variantInputSchema).max(30),
 });
 
 export type ProductInput = z.infer<typeof productInputSchema>;
@@ -83,5 +85,13 @@ export function parseProductForm(formData: FormData) {
 }
 
 export function formErrors(error: z.ZodError) {
-  return error.flatten().fieldErrors;
+  const fieldErrors: Record<string, string[] | undefined> = {
+    ...error.flatten().fieldErrors,
+  };
+  for (const issue of error.issues) {
+    if (!issue.path.length) continue;
+    const key = issue.path.join(".");
+    fieldErrors[key] = [...(fieldErrors[key] ?? []), issue.message];
+  }
+  return fieldErrors;
 }

@@ -20,10 +20,10 @@ Objective: let authorised administrators manage the real categories, products, v
 
 Objective: persistent guest cart and server-calculated pre-payment checkout review. Dependency: Phase 4. Local implementation and focused tests are complete; real-inventory browser and normal-environment production-build verification remain pending.
 
-## Phase 6 — Paystack payments — planned
+## Phase 6 — Paystack payments — completed
 
-Objective: secure initialization, callback/webhook verification, and confirmation. Dependency: Phase 5.
+Objective: secure initialization, callback/webhook verification, confirmation, atomic order fulfilment, and idempotency. The migration is applied; Paystack test initialization, callback/result handoff, verified fulfilment, and duplicate signed-webhook replay were verified against the linked project. Dependency: Phase 5.
 
-## Phase 7 — Orders, dashboard, and production hardening — planned
+## Future — CI/CD and production readiness — deferred
 
-Objective: order operations, dashboard, end-to-end coverage, accessibility, and deployment hardening. Dependencies: Phases 1–6.
+Objective: introduce reviewed CI/deployment gates, safe operational configuration, and production hardening when the project is approaching production deployment. No active workflow, automated deployment gate, or production migration automation is retained. Dependencies: Phases 1–6. See `docs/future/CI-CD.md`.

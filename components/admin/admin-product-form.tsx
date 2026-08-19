@@ -32,7 +32,7 @@ type ProductAction = (
 ) => Promise<AdminCatalogueActionState>;
 
 const blankVariant = (): Variant => ({
-  name: "Default",
+  name: "",
   sku: "",
   priceMinor: 0,
   stockQuantity: 0,
@@ -40,6 +40,14 @@ const blankVariant = (): Variant => ({
 
 function errorFor(state: AdminCatalogueActionState, name: string) {
   return state.fieldErrors?.[name]?.[0];
+}
+
+function variantError(
+  state: AdminCatalogueActionState,
+  index: number,
+  field: keyof Variant,
+) {
+  return errorFor(state, `variants.${index}.${field}`);
 }
 
 export function AdminProductForm({
@@ -51,9 +59,7 @@ export function AdminProductForm({
   product?: Product;
   action: ProductAction;
 }>) {
-  const [variants, setVariants] = useState<Variant[]>(
-    product?.variants ?? [blankVariant()],
-  );
+  const [variants, setVariants] = useState<Variant[]>(product?.variants ?? []);
   const [state, formAction, pending] = useActionState(
     action,
     initialAdminCatalogueActionState,
@@ -73,7 +79,7 @@ export function AdminProductForm({
     );
   };
   return (
-    <form action={formAction} className="space-y-8" noValidate>
+    <form action={formAction} className="space-y-8">
       {product ? <input name="id" type="hidden" value={product.id} /> : null}
       <input name="variants" type="hidden" value={JSON.stringify(variants)} />
       <section className="surface-card p-5 sm:p-7">
@@ -169,7 +175,8 @@ export function AdminProductForm({
           <div>
             <h2 className="text-xl font-black">Variants, prices, and stock</h2>
             <p className="mt-1 text-sm text-[var(--muted)]">
-              Prices are whole kobo minor units; 150000 = ₦1,500.00.
+              Variants are optional. Add one only when this product has options
+              with their own SKU, price, or stock.
             </p>
           </div>
           <button
@@ -188,6 +195,13 @@ export function AdminProductForm({
             {errorFor(state, "variants")}
           </p>
         ) : null}
+        {!variants.length ? (
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] bg-[var(--surface-strong)] p-5 text-sm text-[var(--muted)]">
+            <strong className="block text-[var(--ink)]">Simple product</strong>
+            This product has no variants yet. You can add purchasable options
+            later from its edit page.
+          </div>
+        ) : null}
         <div className="mt-6 space-y-4">
           {variants.map((variant, index) => (
             <div
@@ -195,32 +209,78 @@ export function AdminProductForm({
               key={variant.id ?? `new-${index}`}
             >
               <label className="text-sm font-bold">
-                Name
+                Name <span aria-hidden="true">*</span>
                 <input
+                  aria-describedby={
+                    variantError(state, index, "name")
+                      ? `variant-${index}-name-error`
+                      : undefined
+                  }
+                  aria-invalid={Boolean(variantError(state, index, "name"))}
                   className="mt-1 w-full rounded-lg border border-black/15 bg-white px-3 py-2"
+                  required
                   value={variant.name}
                   onChange={(event) =>
                     updateVariant(index, "name", event.target.value)
                   }
                   disabled={pending}
                 />
+                {variantError(state, index, "name") ? (
+                  <span
+                    className="mt-1 block text-red-800"
+                    id={`variant-${index}-name-error`}
+                  >
+                    {variantError(state, index, "name")}
+                  </span>
+                ) : null}
               </label>
               <label className="text-sm font-bold">
-                SKU
+                SKU <span aria-hidden="true">*</span>
                 <input
+                  aria-describedby={
+                    variantError(state, index, "sku")
+                      ? `variant-${index}-sku-error`
+                      : `variant-${index}-sku-help`
+                  }
+                  aria-invalid={Boolean(variantError(state, index, "sku"))}
                   className="mt-1 w-full rounded-lg border border-black/15 bg-white px-3 py-2"
+                  placeholder="USBC-1M"
+                  required
                   value={variant.sku}
                   onChange={(event) =>
                     updateVariant(index, "sku", event.target.value)
                   }
                   disabled={pending}
                 />
+                <span
+                  className="mt-1 block text-xs font-normal text-[var(--muted)]"
+                  id={`variant-${index}-sku-help`}
+                >
+                  Required; letters, numbers, hyphens, and underscores only.
+                </span>
+                {variantError(state, index, "sku") ? (
+                  <span
+                    className="mt-1 block text-red-800"
+                    id={`variant-${index}-sku-error`}
+                  >
+                    {variantError(state, index, "sku")}
+                  </span>
+                ) : null}
               </label>
               <label className="text-sm font-bold">
-                Price (kobo)
+                Price (kobo) <span aria-hidden="true">*</span>
                 <input
+                  aria-describedby={
+                    variantError(state, index, "priceMinor")
+                      ? `variant-${index}-price-error`
+                      : `variant-${index}-price-help`
+                  }
+                  aria-invalid={Boolean(
+                    variantError(state, index, "priceMinor"),
+                  )}
                   className="mt-1 w-full rounded-lg border border-black/15 bg-white px-3 py-2"
                   min="0"
+                  required
                   type="number"
                   value={variant.priceMinor}
                   onChange={(event) =>
@@ -232,12 +292,35 @@ export function AdminProductForm({
                   }
                   disabled={pending}
                 />
+                <span
+                  className="mt-1 block text-xs font-normal text-[var(--muted)]"
+                  id={`variant-${index}-price-help`}
+                >
+                  Whole kobo: 150000 = ₦1,500.00.
+                </span>
+                {variantError(state, index, "priceMinor") ? (
+                  <span
+                    className="mt-1 block text-red-800"
+                    id={`variant-${index}-price-error`}
+                  >
+                    {variantError(state, index, "priceMinor")}
+                  </span>
+                ) : null}
               </label>
               <label className="text-sm font-bold">
-                Stock
+                Stock <span aria-hidden="true">*</span>
                 <input
+                  aria-describedby={
+                    variantError(state, index, "stockQuantity")
+                      ? `variant-${index}-stock-error`
+                      : undefined
+                  }
+                  aria-invalid={Boolean(
+                    variantError(state, index, "stockQuantity"),
+                  )}
                   className="mt-1 w-full rounded-lg border border-black/15 bg-white px-3 py-2"
                   min="0"
+                  required
                   type="number"
                   value={variant.stockQuantity}
                   onChange={(event) =>
@@ -249,6 +332,14 @@ export function AdminProductForm({
                   }
                   disabled={pending}
                 />
+                {variantError(state, index, "stockQuantity") ? (
+                  <span
+                    className="mt-1 block text-red-800"
+                    id={`variant-${index}-stock-error`}
+                  >
+                    {variantError(state, index, "stockQuantity")}
+                  </span>
+                ) : null}
               </label>
               <div className="flex items-end">
                 <button
@@ -263,7 +354,7 @@ export function AdminProductForm({
                         : current,
                     )
                   }
-                  disabled={pending || variants.length === 1}
+                  disabled={pending}
                 >
                   <Minus size={16} /> Remove
                 </button>

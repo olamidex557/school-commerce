@@ -28,4 +28,4 @@ Next.js App Router, React, TypeScript, Tailwind CSS, Supabase (Postgres, Auth, S
 
 ## Status
 
-Phase 5 guest cart and pre-payment checkout review are implemented locally. The cart persists only versioned product/variant identifiers and quantities; every cart/review calculation reloads active catalogue data through normal public RLS. No customer, order, payment, inventory reservation, or Paystack data is created. The remote database still contains two public categories and no products, so populated cart browser verification awaits approved real inventory. Production build verification remains blocked by the managed execution environment.
+Phase 6 is complete: server-authoritative checkout initialization, Paystack redirect/callback/result handoff, signed webhook + API verification, atomic stock deduction, payment attempts, and duplicate-webhook replay verification have been exercised with Paystack test data. CI/CD is intentionally deferred until a future production-readiness phase; no automated deployment or validation workflow is active. See `docs/future/CI-CD.md`.

@@ -2,7 +2,7 @@
 
 Next.js 16 App Router uses server components by default; interactive cart and form controls are client components. Route handlers and server actions are reserved for validated, sensitive mutations.
 
-`lib/supabase/server.ts` creates cookie-aware server clients; `lib/supabase/client.ts` is browser-safe; both obtain only public configuration through `lib/supabase/env.ts`. The service-role key is intentionally unused and never imported into browser code. `proxy.ts` refreshes Supabase sessions and calls the RLS-backed `is_admin()` RPC for `/admin/*` before allowing a request through.
+`lib/supabase/server.ts` creates cookie-aware server clients; `lib/supabase/client.ts` is browser-safe; both obtain only public configuration through `lib/supabase/env.ts`. `lib/supabase/service.ts` is server-only and is limited to Phase 6’s private payment RPC/data access; its service-role key is never imported into browser code. `proxy.ts` refreshes Supabase sessions and calls the RLS-backed `is_admin()` RPC for `/admin/*` before allowing a request through.
 
 `/admin/login` is the only login route. Its server action validates credentials with Zod, applies the login limiter, authenticates through the server Supabase client, verifies `is_admin()`, and redirects server-side only after authorization succeeds. The `'use server'` module exports only the async action; `useActionState`'s type and initial state live in `lib/auth/admin-login-state.ts`. The server Supabase cookie adapter establishes and clears the session. `app/admin/(protected)/layout.tsx` independently repeats the server-side `requireAdmin()` check, so authorization does not depend on proxy behavior or hidden navigation. The login client component is limited to form state and password visibility; it never receives or persists a session token.
 
@@ -15,6 +15,16 @@ Product/order data will be read through scoped server-side data-access modules. 
 Environment values prefixed `NEXT_PUBLIC_` are browser-safe. Supabase URL and anon key are public configuration; Supabase service role and Paystack secret are server-only. Folder conventions: routes in `app`, reusable UI in `components`, server/domain logic in `lib`, shared schemas in `lib/validation`, migrations in `supabase/migrations`, and documentation in `docs`.
 
 Data flow: browser UI → validated server action/route handler → Supabase with user/session context → RLS-protected Postgres. Payment callbacks → server verification → idempotent order/payment update.
+
+## Future production readiness
+
+No CI/CD workflow is active. Any future delivery pipeline must preserve the current server-only Paystack/service-role boundaries and must not automate Supabase migrations or commerce writes. The deferred design requirements are in `docs/future/CI-CD.md`.
+
+## Payments and fulfilment
+
+The checkout Server Action accepts only cart identifiers, a UUID idempotency key, and validated guest details. The private payment RPC reloads variants/products and derives all money, then creates a `pending_payment` immutable order snapshot and one unique payment attempt. It is not a stock reservation. Paystack initialization, verification, webhook HMAC validation, and callback recovery run only in server modules. The browser receives an authorization URL and retains an HttpOnly opaque reference cookie for its result view.
+
+`charge.success` is verified against Paystack’s transaction API before the fulfilment RPC runs. That RPC locks the attempt and order, conditionally decrements each variant only if enough stock remains, writes the transaction result, and changes `pending_payment → paid` as one database transaction. Database uniqueness plus locks make repeated click, duplicate webhook, callback/webhook, and concurrent verification converge without duplicate paid orders or stock deductions.
 
 ## Storefront catalogue
 

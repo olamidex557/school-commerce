@@ -18,7 +18,7 @@ Build the protected administration workflow for categories, products, variants, 
 
 - Added protected routes: `/admin/products`, `/admin/products/new`, `/admin/products/[id]`, and `/admin/categories`.
 - Added product discovery with search, category/status filters, primary-image fallback, active-variant price, summed stock, low/out-of-stock state, featured/archive state, updated date, edit, and archive/restore actions.
-- Added product create/edit forms for schema-backed name, stable explicit slug, description, category, featured/archive flags, and one or more variants. Variants hold price in integer kobo/minor units and stock; omitted existing variants become inactive rather than being deleted.
+- Added product create/edit forms for schema-backed name, stable explicit slug, description, category, featured/archive flags, and optional variants. A new simple product has no generated default variant; each explicitly added variant requires a name, SKU, integer-kobo price, and stock. Omitted existing variants become inactive rather than being deleted.
 - Product/category/archive/image mutations explicitly maintain parent `updated_at` values because the existing schema has no automatic timestamp trigger.
 - Added category create, inline edit, product count, restore, and guarded archive operations. Categories with active products cannot be archived.
 - Added product image upload/removal and a lightweight storefront preview link. Upload appends an image position; first image is primary. Reordering is not implemented.

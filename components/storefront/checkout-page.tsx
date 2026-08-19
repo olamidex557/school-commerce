@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { CheckCircle2 } from "lucide-react";
-import { reviewCheckout } from "@/app/checkout/actions";
+import { initializeCheckoutPayment, reviewCheckout } from "@/app/checkout/actions";
 import { serializeCart } from "@/lib/cart";
 import { initialCheckoutActionState } from "@/lib/checkout/state";
 import { useCart } from "./cart-provider";
@@ -21,6 +21,14 @@ export function CheckoutPage() {
     reviewCheckout,
     initialCheckoutActionState,
   );
+  const [paymentState, paymentAction, paymentPending] = useActionState(
+    initializeCheckoutPayment,
+    {},
+  );
+  const [checkoutKey] = useState(() => crypto.randomUUID());
+  useEffect(() => {
+    if (paymentState.authorizationUrl) window.location.assign(paymentState.authorizationUrl);
+  }, [paymentState.authorizationUrl]);
   if (!hydrated)
     return (
       <div className="surface-card p-10 text-center text-[var(--muted)]">
@@ -48,8 +56,8 @@ export function CheckoutPage() {
           Ready for payment
         </h1>
         <p className="mt-3 max-w-xl text-[var(--muted)]">
-          Your items and totals were checked against the current catalogue.
-          Payment is not available yet, and no order has been created.
+          Your items and totals were checked against the current catalogue. We’ll
+          recheck them once more on the server before securely redirecting you.
         </p>
         <div className="mt-7 divide-y divide-[var(--line)] border-y border-[var(--line)]">
           {state.review.lines.map((line) => (
@@ -85,9 +93,21 @@ export function CheckoutPage() {
             <strong>{price(state.review.totalMinor)}</strong>
           </div>
         </div>
-        <Link className="button-secondary focus-ring mt-7" href="/cart">
-          Back to cart
-        </Link>
+        <form action={paymentAction} className="mt-7 flex flex-wrap gap-3">
+          <input name="cart" type="hidden" value={serializeCart(items)} />
+          <input name="checkoutKey" type="hidden" value={checkoutKey} />
+          <input name="fullName" type="hidden" value={state.review.details?.fullName ?? ""} />
+          <input name="email" type="hidden" value={state.review.details?.email ?? ""} />
+          <input name="phone" type="hidden" value={state.review.details?.phone ?? ""} />
+          <input name="fulfillmentMethod" type="hidden" value={state.review.details?.fulfillmentMethod ?? ""} />
+          <input name="location" type="hidden" value={state.review.details?.location ?? ""} />
+          <input name="note" type="hidden" value={state.review.details?.note ?? ""} />
+          <button className="button-primary focus-ring" type="submit" disabled={paymentPending}>
+            {paymentPending ? "Redirecting securely…" : "Pay securely with Paystack"}
+          </button>
+          <Link className="button-secondary focus-ring" href="/cart">Back to cart</Link>
+          {paymentState.message ? <p className="alert-error basis-full px-4 py-3 text-sm" role="alert">{paymentState.message}</p> : null}
+        </form>
       </section>
     );
   const errors = state.fieldErrors ?? {};

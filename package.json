@@ -12,13 +12,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "check:migrations": "node scripts/check-migrations.mjs",
-    "check:secrets": "node scripts/check-secrets.mjs",
-    "check:server-boundaries": "node scripts/check-server-boundaries.mjs",
-    "security:dependencies": "npm audit --omit=dev --audit-level=high",
-    "smoke": "node scripts/smoke-url.mjs",
-    "ci": "npm run lint && npm run typecheck && npm test && npm run build && npm run check:migrations && npm run check:secrets && npm run check:server-boundaries && npm run security:dependencies"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
