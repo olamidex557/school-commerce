@@ -12,7 +12,7 @@ export function SiteHeader() {
   const close = () => setOpen(false);
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--line)] bg-[color:var(--canvas)]/92 backdrop-blur-xl">
-      <Container className="flex min-h-18 items-center justify-between py-3">
+      <Container className="flex min-h-16 items-center justify-between py-2">
         <Link
           href="/"
           className="focus-ring flex items-center gap-2"
@@ -21,7 +21,7 @@ export function SiteHeader() {
           <span className="grid h-8 w-8 place-items-center rounded-[.7rem] bg-[var(--brand)] text-sm font-black text-white">
             CA
           </span>
-          <span className="font-display text-xl font-bold">
+          <span className="font-display text-lg font-bold sm:text-xl">
             {storefrontPublicConfig.brandName}
           </span>
         </Link>
@@ -43,23 +43,26 @@ export function SiteHeader() {
             Contact
           </a>
         </nav>
-        <button
-          aria-controls="mobile-menu"
-          aria-expanded={open}
-          aria-label={open ? "Close navigation" : "Open navigation"}
-          className="button-secondary focus-ring md:hidden"
-          type="button"
-          onClick={() => setOpen(!open)}
-        >
-          {open ? <X size={18} /> : <Menu size={18} />}
-        </button>
+        <div className="flex items-center gap-1 md:hidden">
+          <CartLink className="px-2.5" />
+          <button
+            aria-controls="mobile-menu"
+            aria-expanded={open}
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            className="button-secondary focus-ring min-h-10 px-2.5"
+            type="button"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </Container>
       {open ? (
         <div
           className="border-t border-[var(--line)] bg-[var(--surface)] md:hidden"
           id="mobile-menu"
         >
-          <Container className="flex flex-col gap-1 py-4">
+          <Container className="flex flex-col gap-1 py-3">
             <Link
               className="button-quiet focus-ring justify-start"
               href="/shop"
@@ -76,7 +79,7 @@ export function SiteHeader() {
             </Link>
             <CartLink onNavigate={close} />
             <a
-              className="button-primary focus-ring mt-2"
+              className="button-primary focus-ring mt-1"
               href={storefrontPublicConfig.contactHref}
               onClick={close}
             >

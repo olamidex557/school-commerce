@@ -2,16 +2,18 @@
 
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
+import { clsx } from "clsx";
 import { useCart } from "./cart-provider";
 
 export function CartLink({
   onNavigate,
-}: Readonly<{ onNavigate?: () => void }>) {
+  className,
+}: Readonly<{ onNavigate?: () => void; className?: string }>) {
   const { itemCount, hydrated } = useCart();
   return (
     <Link
       aria-label={`Cart${itemCount ? `, ${itemCount} items` : ""}`}
-      className="button-quiet focus-ring relative"
+      className={clsx("button-quiet focus-ring relative", className)}
       href="/cart"
       onClick={onNavigate}
     >

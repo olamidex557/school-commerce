@@ -79,7 +79,7 @@ textarea {
   box-shadow: var(--shadow-md);
 }
 .section-space {
-  padding-block: clamp(4.5rem, 8vw, 8rem);
+  padding-block: clamp(2.75rem, 5vw, 5.5rem);
 }
 .focus-ring {
   outline: none;
@@ -97,7 +97,7 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   min-height: 2.85rem;
   padding: 0.7rem 1.1rem;
   font-size: 0.88rem;

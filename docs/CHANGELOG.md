@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-19 — Storefront UI refinement
+
+- Tightened the cream/espresso storefront rhythm across the header, hero, homepage sections, shop controls, product cards, and footer. Homepage featured products and every shop result now use the same two-column grid from mobile through desktop.
+- Made the cart visible in the compact mobile header beside a CSS mobile-only hamburger; desktop/tablet retains the full primary navigation. Existing GSAP/reduced-motion behavior, server-rendered catalogue access, and all commerce/auth/payment/order logic remain unchanged.
+
 ## 2026-08-19 — Phase 8 delivery and pickup operations
 
 - Added method-aware fulfilment operations: pickup confirmation is displayed as ready for pickup and completes as collected; delivery confirmation proceeds through `out_for_delivery` before completion. The protected detail displays existing pickup instructions when configured.

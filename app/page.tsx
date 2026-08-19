@@ -61,22 +61,22 @@ export default async function HomePage() {
   return (
     <main>
       <SiteHeader />
-      <section className="relative overflow-hidden bg-[var(--ink)] py-20 text-white sm:py-30">
-        <div className="absolute -top-24 right-[-8rem] h-72 w-72 rounded-full bg-[var(--brand)] blur-3xl opacity-35" />
-        <div className="absolute bottom-[-10rem] left-[20%] h-72 w-72 rounded-full bg-[var(--highlight)] blur-3xl opacity-15" />
-        <Container className="grid gap-12 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
+      <section className="relative overflow-hidden bg-[var(--ink)] py-14 text-white sm:py-18">
+        <div className="absolute -top-24 right-[-8rem] h-72 w-72 rounded-full bg-[var(--brand)] opacity-35 blur-3xl" />
+        <div className="absolute bottom-[-10rem] left-[20%] h-72 w-72 rounded-full bg-[var(--highlight)] opacity-15 blur-3xl" />
+        <Container className="grid gap-8 lg:grid-cols-[1.2fr_.8fr] lg:items-center">
           <Reveal className="relative">
-            <p className="mb-5 text-kicker text-[var(--highlight)]">
+            <p className="text-kicker mb-3 text-[var(--highlight)]">
               Made for campus life
             </p>
-            <h1 className="font-display max-w-3xl text-5xl font-bold leading-[.94] sm:text-7xl">
+            <h1 className="font-display max-w-3xl text-4xl leading-[.94] font-bold sm:text-6xl">
               Tech that keeps up with your campus day.
             </h1>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-white/72">
+            <p className="mt-5 max-w-xl leading-7 text-white/72 sm:text-lg">
               Reliable charging cables and earpieces, with straightforward
               pickup or delivery across campus.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-2.5">
               <ButtonLink href="/shop">
                 Shop accessories <ArrowRight size={17} />
               </ButtonLink>
@@ -86,45 +86,46 @@ export default async function HomePage() {
             </div>
           </Reveal>
           <Reveal className="relative" stagger>
-          <div className="rounded-[var(--radius-xl)] border border-white/15 bg-white/8 p-7 text-white shadow-[var(--shadow-lg)] backdrop-blur sm:p-10">
-            <PackageCheck size={38} strokeWidth={2.5} />
-            <p className="font-display mt-8 text-4xl font-bold tracking-tight">
-              Campus-ready convenience.
-            </p>
-            <p className="mt-3 leading-7">
-              Choose delivery to your location or collect when it suits your
-              schedule.
-            </p>
-          </div></Reveal>
+            <div className="rounded-[var(--radius-lg)] border border-white/15 bg-white/8 p-5 text-white shadow-[var(--shadow-lg)] backdrop-blur sm:p-7">
+              <PackageCheck size={32} strokeWidth={2.5} />
+              <p className="font-display mt-5 text-3xl font-bold tracking-tight">
+                Campus-ready convenience.
+              </p>
+              <p className="mt-2 leading-6 text-white/80">
+                Choose delivery to your location or collect when it suits your
+                schedule.
+              </p>
+            </div>
+          </Reveal>
         </Container>
       </section>
       <section id="categories" className="section-space">
         <Container>
-          <p className="text-kicker">
-            Start here
-          </p>
-          <h2 className="font-display mt-3 text-4xl font-bold sm:text-5xl">
+          <p className="text-kicker">Start here</p>
+          <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl">
             The everyday essentials
           </h2>
-          <Reveal className="mt-9 grid gap-4 md:grid-cols-2" stagger>
+          <Reveal className="mt-6 grid gap-3 md:grid-cols-2" stagger>
             {categories.length ? (
               categories.map((category) => (
                 <Link
                   key={category.id}
                   href={`/shop?category=${category.slug}`}
-                  className="group rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface)] p-7 shadow-[var(--shadow-sm)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]"
+                  className="group rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[var(--shadow-sm)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-md)]"
                 >
                   {category.slug === "cables" ? (
                     <Cable size={30} />
                   ) : (
                     <Headphones size={30} />
                   )}
-                  <h3 className="font-display mt-10 text-3xl font-bold">{category.name}</h3>
+                  <h3 className="font-display mt-6 text-2xl font-bold">
+                    {category.name}
+                  </h3>
                   <p className="mt-2 text-[var(--muted)]">
                     {category.description ||
                       "Explore campus-ready accessories."}
                   </p>
-                  <span className="mt-6 inline-flex items-center gap-2 font-bold">
+                  <span className="mt-4 inline-flex items-center gap-2 font-bold">
                     Explore{" "}
                     <ArrowRight
                       size={16}
@@ -143,21 +144,16 @@ export default async function HomePage() {
         <Container>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-kicker">
-                Featured picks
-              </p>
-              <h2 className="font-display mt-3 text-4xl font-bold sm:text-5xl">
+              <p className="text-kicker">Featured picks</p>
+              <h2 className="font-display mt-2 text-3xl font-bold sm:text-4xl">
                 Essentials students rely on
               </h2>
             </div>
-            <Link
-              className="focus-ring button-secondary"
-              href="/shop"
-            >
+            <Link className="focus-ring button-secondary" href="/shop">
               View all products
             </Link>
           </div>
-          <Reveal className="mt-9" stagger>
+          <Reveal className="mt-6" stagger>
             {dataError ? (
               <CatalogueErrorState />
             ) : featuredProducts.length ? (
@@ -169,7 +165,7 @@ export default async function HomePage() {
         </Container>
       </section>
       <section className="section-space bg-[var(--ink)] text-white">
-        <Container className="grid gap-8 md:grid-cols-3">
+        <Container className="grid gap-6 md:grid-cols-3">
           {conveniencePoints.map(({ icon: Icon, title, text }) => (
             <div key={title} className="border-l border-white/20 pl-5">
               <Icon className="text-[var(--highlight)]" size={25} />
