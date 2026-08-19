@@ -13,9 +13,25 @@ begin
 
   if not exists (
     select 1 from pg_policies
-    where schemaname = 'public' and tablename = 'orders' and policyname = 'admins manage orders'
+    where schemaname = 'public' and tablename = 'orders' and policyname = 'admins view orders'
   ) then
-    raise exception 'admin-only orders policy is missing';
+    raise exception 'admin order read policy is missing';
+  end if;
+
+  if exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename in ('orders', 'payment_attempts')
+      and policyname in ('admins manage orders', 'admins manage payment attempts')
+  ) then
+    raise exception 'broad admin payment/order mutation policy must not remain';
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'order_status_events'
+      and policyname = 'admins view order status events'
+  ) then
+    raise exception 'admin order status history policy is missing';
   end if;
 
   if not exists (

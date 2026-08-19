@@ -24,6 +24,10 @@ Objective: persistent guest cart and server-calculated pre-payment checkout revi
 
 Objective: secure initialization, callback/webhook verification, confirmation, atomic order fulfilment, and idempotency. The migration is applied; Paystack test initialization, callback/result handoff, verified fulfilment, and duplicate signed-webhook replay were verified against the linked project. Dependency: Phase 5.
 
+## Phase 7 — Admin order operations — in progress
+
+Objective: give authorised administrators a protected order list/detail workflow and audited operational status transitions. Payment verification, Paystack references/amounts, immutable snapshots, idempotency, and stock changes remain outside administrator control. The focused migration is applied and linked schema/policy/anonymous-denial verification passed. Completion remains pending controlled admin/non-admin and transition-concurrency verification without using existing customer orders. Dependency: Phase 6. See `docs/phases/PHASE-07-ADMIN-ORDER-OPERATIONS.md`.
+
 ## Future — CI/CD and production readiness — deferred
 
 Objective: introduce reviewed CI/deployment gates, safe operational configuration, and production hardening when the project is approaching production deployment. No active workflow, automated deployment gate, or production migration automation is retained. Dependencies: Phases 1–6. See `docs/future/CI-CD.md`.

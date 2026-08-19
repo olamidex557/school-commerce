@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-08-19 — Phase 7 admin order operations
+
+- Added protected administrator order list/detail routes with validated URL filters, pagination, immutable order/item/customer snapshots, read-only payment-attempt metadata, operational history, loading/error/empty states, and the existing cream/espresso admin hierarchy.
+- Added `202608190001_admin_order_operations.sql`: audited compare-and-set operational transitions (`paid → confirmed|cancelled`, `confirmed → completed|cancelled`), locked by `updated_at`; read-only admin order/payment policies; and revoked direct authenticated DML for customers, orders, items, and payment attempts.
+- Paystack verification, payment references/transaction IDs/amounts, payment statuses/timestamps, idempotent fulfilment, and stock remain outside administrator control. No CI/CD, deployment, or payment/order test data was created.
+- Applied and catalog-verified the Phase 7 migration on the linked project. The policy assertion SQL passed; anonymous order reads returned no rows and anonymous status-RPC mutation returned HTTP 401. No customer/order/payment/stock record was changed. Controlled authenticated admin/non-admin and runtime transition verification remain pending because no non-admin identity or disposable controlled paid order is available.
+
 ## 2026-08-19 — CI/CD deferred
 
 - Removed the unvalidated Phase 7 GitHub Actions workflows, smoke scripts, Dependabot configuration, and CI-only package scripts. CI/CD is intentionally deferred to a future production-readiness phase; its safety requirements are retained in `docs/future/CI-CD.md`.

@@ -10,7 +10,7 @@ The Supabase browser client uses the official `@supabase/ssr` cookie adapter wit
 
 The `/admin/*` proxy detects Supabase's explicit invalid-refresh-token response from `getUser()`. It clears only the current project's Supabase auth cookie/chunks, treats the request as unauthenticated, and returns the login page or a fixed login redirect. It does not clear valid sessions or retry a known-invalid refresh token on later requests.
 
-Product/order data will be read through scoped server-side data-access modules. Checkout will create orders via a transactional database RPC or server route that recalculates prices and reserves stock. Paystack initialization and verification are server-only modules/handlers.
+Product/order data is read through scoped server-side data-access modules. Checkout creates orders via a transactional database RPC that recalculates prices; Paystack initialization and verification are server-only modules/handlers. The protected order dashboard reads RLS-backed narrowed DTOs through `lib/admin/orders.ts`; its sole mutation calls the audited `admin_update_order_status` RPC after `requireAdmin()`.
 
 Environment values prefixed `NEXT_PUBLIC_` are browser-safe. Supabase URL and anon key are public configuration; Supabase service role and Paystack secret are server-only. Folder conventions: routes in `app`, reusable UI in `components`, server/domain logic in `lib`, shared schemas in `lib/validation`, migrations in `supabase/migrations`, and documentation in `docs`.
 
@@ -25,6 +25,10 @@ No CI/CD workflow is active. Any future delivery pipeline must preserve the curr
 The checkout Server Action accepts only cart identifiers, a UUID idempotency key, and validated guest details. The private payment RPC reloads variants/products and derives all money, then creates a `pending_payment` immutable order snapshot and one unique payment attempt. It is not a stock reservation. Paystack initialization, verification, webhook HMAC validation, and callback recovery run only in server modules. The browser receives an authorization URL and retains an HttpOnly opaque reference cookie for its result view.
 
 `charge.success` is verified against Paystack’s transaction API before the fulfilment RPC runs. That RPC locks the attempt and order, conditionally decrements each variant only if enough stock remains, writes the transaction result, and changes `pending_payment → paid` as one database transaction. Database uniqueness plus locks make repeated click, duplicate webhook, callback/webhook, and concurrent verification converge without duplicate paid orders or stock deductions.
+
+## Admin order operations
+
+Phase 7 reuses the existing order-status enum: only verified `paid` orders may move to `confirmed` or `cancelled`, and only `confirmed` orders may move to `completed` or `cancelled`. The operation is a locked compare-and-set transition using `orders.updated_at`, and it writes `order_status_events` with the administrator UUID. Payment attempt/order payment fields, order/item/customer snapshots, and stock are read-only to the dashboard. The migration replaces broad authenticated-admin DML policies for order/payment records with admin read policies and a narrowly granted, self-authorising `security definer` transition RPC. Phase 6 service-role payment paths remain unchanged.
 
 ## Storefront catalogue
 

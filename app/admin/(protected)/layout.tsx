@@ -40,6 +40,12 @@ export default async function ProtectedAdminLayout({
               >
                 Categories
               </Link>
+              <Link
+                className="admin-button-ghost admin-button-sm focus-ring"
+                href="/admin/orders"
+              >
+                Orders
+              </Link>
             </nav>
             <AdminSignOutButton />
           </div>
